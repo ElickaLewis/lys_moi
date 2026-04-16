@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+</head>
+<body>
+
+    <h1>Se connecter 🔐</h1>
+
+    <form id="login-form">
+        <label for="email">Email :</label><br>
+        <input type="email" id="email" required><br><br>
+
+        <label for="password">Mot de passe :</label><br>
+        <input type="password" id="password" required><br><br>
+
+        <button type="submit">Se connecter</button>
+    </form>
+
+    <p id="message"></p>
+
+    <br>
+    <button onclick="window.location.href='index.html'">
+        Retour
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const form = document.getElementById("login-form");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            message.textContent = "Connexion en cours...";
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            console.log("DATA :", data);
+            console.log("ERROR :", error);
+
+            if (error) {
+                message.textContent = "Erreur : " + error.message;
+            } else {
+                message.textContent = "Connexion réussie 🎉";
+
+                // Redirection simple (on fera mieux après)
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1000);
+            }
+        });
+    </script>
+
+</body>
+</html>

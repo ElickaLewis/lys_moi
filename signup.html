@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un compte</title>
+</head>
+<body>
+
+    <h1>Créer un compte ✍️</h1>
+
+    <form id="signup-form">
+        <label for="pseudo">Pseudo :</label><br>
+        <input type="text" id="pseudo" required><br><br>
+
+        <label for="email">Email :</label><br>
+        <input type="email" id="email" required><br><br>
+
+        <label for="password">Mot de passe :</label><br>
+        <input type="password" id="password" required><br><br>
+
+        <label for="confirm-password">Confirmer le mot de passe :</label><br>
+        <input type="password" id="confirm-password" required><br><br>
+
+        <p>Type de compte :</p>
+
+        <input type="radio" id="reader" name="role" value="reader" checked>
+        <label for="reader">Lecteur 👀</label><br>
+
+        <input type="radio" id="writer" name="role" value="writer">
+        <label for="writer">Écrivain ✍️</label><br><br>
+
+        <button type="submit">Créer le compte</button>
+    </form>
+
+    <p id="message"></p>
+
+    <br>
+    <button onclick="window.location.href='index.html'">
+        Retour
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const form = document.getElementById("signup-form");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const pseudo = document.getElementById("pseudo").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+
+            if (password !== confirmPassword) {
+                message.textContent = "Les mots de passe ne correspondent pas ❌";
+                return;
+            }
+
+            message.textContent = "Envoi en cours...";
+
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        pseudo: pseudo,
+                        role: role
+                    }
+                }
+            });
+
+            console.log("DATA :", data);
+            console.log("ERROR :", error);
+
+            if (error) {
+                message.textContent = "Erreur : " + error.message;
+            } else {
+                message.textContent = "Compte créé avec succès 🎉";
+            }
+        });
+    </script>
+
+</body>
+</html>

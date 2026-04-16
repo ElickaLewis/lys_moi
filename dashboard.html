@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+
+    <h1 id="welcome-title">Bienvenue 🎉</h1>
+    <p id="role-text">Chargement...</p>
+
+    <button onclick="logout()">Se déconnecter</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function loadUser() {
+            const { data, error } = await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = data.user;
+            const pseudo = user.user_metadata?.pseudo || "utilisateur";
+            const role = user.user_metadata?.role || "reader";
+
+            document.getElementById("welcome-title").textContent = `Bienvenue ${pseudo} 🎉`;
+
+            if (role === "writer") {
+                document.getElementById("role-text").textContent = "Tu es connecté en tant qu’Écrivain ✍️";
+            } else {
+                document.getElementById("role-text").textContent = "Tu es connecté en tant que Lecteur 👀";
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+        }
+
+        loadUser();
+    </script>
+
+</body>
+</html>
