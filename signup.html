@@ -2,90 +2,242 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Créer un compte</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Lys Moi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+
+            background:
+                linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
+                url("images/background.png");
+
+            background-size: cover;
+            background-position: right center;
+            background-repeat: no-repeat;
+
+            color: #f5f1e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            background: rgba(20, 20, 25, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 45px 35px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .top {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            font-size: 2.4rem;
+            color: #fff8ee;
+        }
+
+        .field {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            color: #ddd3c4;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            box-shadow: 0 0 0 2px rgba(240, 198, 116, 0.4);
+        }
+
+        .role-select {
+            text-align: left;
+            margin: 15px 0 20px;
+            color: #ddd3c4;
+        }
+
+        .role-select label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .primary {
+            background: #f0c674;
+            color: #1a1620;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(240, 198, 116, 0.25);
+        }
+
+        .secondary {
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.3);
+            margin-top: 15px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        #message {
+            margin-top: 15px;
+            color: #f0c674;
+            min-height: 24px;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Créer un compte ✍️</h1>
+    <div class="container">
+        <div class="top">Lys Moi</div>
 
-    <form id="signup-form">
-        <label for="pseudo">Pseudo :</label><br>
-        <input type="text" id="pseudo" required><br><br>
+        <h1>Créer un compte ✍️</h1>
 
-        <label for="email">Email :</label><br>
-        <input type="email" id="email" required><br><br>
+        <form id="signup-form">
 
-        <label for="password">Mot de passe :</label><br>
-        <input type="password" id="password" required><br><br>
+            <div class="field">
+                <label>Pseudo</label>
+                <input type="text" id="pseudo" required>
+            </div>
 
-        <label for="confirm-password">Confirmer le mot de passe :</label><br>
-        <input type="password" id="confirm-password" required><br><br>
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="email" required>
+            </div>
 
-        <p>Type de compte :</p>
+            <div class="field">
+                <label>Mot de passe</label>
+                <input type="password" id="password" required>
+            </div>
 
-        <input type="radio" id="reader" name="role" value="reader" checked>
-        <label for="reader">Lecteur 👀</label><br>
+            <div class="field">
+                <label>Confirmer le mot de passe</label>
+                <input type="password" id="confirm-password" required>
+            </div>
 
-        <input type="radio" id="writer" name="role" value="writer">
-        <label for="writer">Écrivain ✍️</label><br><br>
+            <div class="role-select">
+                <p>Type de compte :</p>
 
-        <button type="submit">Créer le compte</button>
-    </form>
+                <label>
+                    <input type="radio" name="role" value="reader" checked>
+                    Lecteur 👀
+                </label>
 
-    <p id="message"></p>
+                <label>
+                    <input type="radio" name="role" value="writer">
+                    Écrivain ✍️
+                </label>
+            </div>
 
-    <br>
-    <button onclick="window.location.href='index.html'">
-        Retour
-    </button>
+            <button class="primary" type="submit">
+                Créer le compte
+            </button>
+
+        </form>
+
+        <p id="message"></p>
+
+        <button class="secondary" onclick="window.location.href='index.html'">
+            ← Retour
+        </button>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+<script>
+    const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const form = document.getElementById("signup-form");
-        const message = document.getElementById("message");
+    const form = document.getElementById("signup-form");
+    const message = document.getElementById("message");
 
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-            const pseudo = document.getElementById("pseudo").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const confirmPassword = document.getElementById("confirm-password").value;
-            const role = document.querySelector('input[name="role"]:checked').value;
+        const pseudo = document.getElementById("pseudo").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+        const role = document.querySelector('input[name="role"]:checked').value;
 
-            if (password !== confirmPassword) {
-                message.textContent = "Les mots de passe ne correspondent pas ❌";
-                return;
-            }
+        if (password !== confirmPassword) {
+            message.textContent = "Les mots de passe ne correspondent pas ❌";
+            return;
+        }
 
-            message.textContent = "Envoi en cours...";
+        message.textContent = "Création du compte...";
 
-            const { data, error } = await supabaseClient.auth.signUp({
-                email: email,
-                password: password,
-                options: {
-                    data: {
-                        pseudo: pseudo,
-                        role: role
-                    }
+        const { error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    pseudo: pseudo,
+                    role: role,
+                    badge: role === "writer" ? "Encre nouvelle" : null
                 }
-            });
-
-            console.log("DATA :", data);
-            console.log("ERROR :", error);
-
-            if (error) {
-                message.textContent = "Erreur : " + error.message;
-            } else {
-                message.textContent = "Compte créé avec succès 🎉";
             }
         });
-    </script>
+
+        if (error) {
+            message.textContent = "Erreur : " + error.message;
+        } else {
+            message.textContent = "Compte créé avec succès 🎉";
+
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1000);
+        }
+    });
+</script>
 
 </body>
 </html>
