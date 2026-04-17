@@ -14,20 +14,72 @@
             margin: 0;
             min-height: 100vh;
             font-family: Georgia, "Times New Roman", serif;
-
             background:
                 linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
                 url("images/background.png");
-
             background-size: cover;
             background-position: right center;
             background-repeat: no-repeat;
-
             color: #f5f1e8;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 30px;
+            padding-top: 110px;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            color: #f5f1e8;
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         .container {
@@ -130,10 +182,27 @@
             color: #f0c674;
             min-height: 24px;
         }
+
+        @media (max-width: 700px) {
+            body {
+                padding-top: 100px;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+        }
     </style>
 </head>
 
 <body>
+
+    <header class="main-header">
+        <div class="header-left">
+            <span class="logo" onclick="goHome()">Lys Moi</span>
+        </div>
+        <div class="header-right" id="header-right"></div>
+    </header>
 
     <div class="container">
         <div class="top">Lys Moi</div>
@@ -141,7 +210,6 @@
         <h1>Créer un compte ✍️</h1>
 
         <form id="signup-form">
-
             <div class="field">
                 <label>Pseudo</label>
                 <input type="text" id="pseudo" required>
@@ -179,7 +247,6 @@
             <button class="primary" type="submit">
                 Créer le compte
             </button>
-
         </form>
 
         <p id="message"></p>
@@ -190,54 +257,97 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-    const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const form = document.getElementById("signup-form");
-    const message = document.getElementById("message");
-
-    form.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const pseudo = document.getElementById("pseudo").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirm-password").value;
-        const role = document.querySelector('input[name="role"]:checked').value;
-
-        if (password !== confirmPassword) {
-            message.textContent = "Les mots de passe ne correspondent pas ❌";
-            return;
+        function goHome() {
+            window.location.href = "index.html";
         }
 
-        message.textContent = "Création du compte...";
+        function goLogin() {
+            window.location.href = "login.html";
+        }
 
-        const { error } = await supabaseClient.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    pseudo: pseudo,
-                    role: role,
-                    badge: role === "writer" ? "Encre nouvelle" : null
+        function goSignup() {
+            window.location.href = "signup.html";
+        }
+
+        function goDashboard() {
+            window.location.href = "dashboard.html";
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+        }
+
+        async function loadHeader() {
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
+
+            if (error || !data.user) {
+                header.innerHTML = `
+                    <button class="header-btn" onclick="goLogin()">Connexion</button>
+                    <button class="header-btn" onclick="goSignup()">Inscription</button>
+                `;
+                return;
+            }
+
+            const pseudo = data.user.user_metadata?.pseudo || "Mon compte";
+
+            header.innerHTML = `
+                <button class="header-btn profile-btn" onclick="goDashboard()">👤 ${pseudo}</button>
+                <button class="header-btn" onclick="logout()">Déconnexion</button>
+            `;
+        }
+
+        const form = document.getElementById("signup-form");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const pseudo = document.getElementById("pseudo").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+
+            if (password !== confirmPassword) {
+                message.textContent = "Les mots de passe ne correspondent pas ❌";
+                return;
+            }
+
+            message.textContent = "Création du compte...";
+
+            const { error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        pseudo: pseudo,
+                        role: role,
+                        badge: role === "writer" ? "Encre nouvelle" : null
+                    }
                 }
+            });
+
+            if (error) {
+                message.textContent = "Erreur : " + error.message;
+            } else {
+                message.textContent = "Compte créé avec succès 🎉";
+
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1000);
             }
         });
 
-        if (error) {
-            message.textContent = "Erreur : " + error.message;
-        } else {
-            message.textContent = "Compte créé avec succès 🎉";
-
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 1000);
-        }
-    });
-</script>
+        loadHeader();
+    </script>
 
 </body>
 </html>
