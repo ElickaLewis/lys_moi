@@ -26,7 +26,6 @@
             justify-content: center;
             padding: 30px;
             padding-top: 110px;
-            position: relative;
         }
 
         .main-header {
@@ -66,10 +65,10 @@
             font-size: 0.95rem;
             font-family: inherit;
             cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
             background: transparent;
             color: #f5f1e8;
             border: 1px solid rgba(255,255,255,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
         .header-btn:hover {
@@ -79,8 +78,70 @@
 
         .profile-btn {
             background: rgba(20, 20, 25, 0.72);
-            color: #f5f1e8;
             border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-menu-wrapper {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2000;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
         }
 
         .container {
@@ -197,19 +258,13 @@
             .main-header {
                 padding: 0 15px;
             }
-
-            .header-right {
-                justify-content: flex-end;
-            }
         }
     </style>
 </head>
 <body>
 
     <header class="main-header">
-        <div class="header-left">
-            <span class="logo" onclick="goHome()">Lys Moi</span>
-        </div>
+        <span class="logo" onclick="goHome()">Lys Moi</span>
         <div class="header-right" id="header-right"></div>
     </header>
 
@@ -239,7 +294,6 @@
     <script>
         const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
         const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
-
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         function goHome() {
@@ -258,40 +312,82 @@
             window.location.href = "dashboard.html";
         }
 
+        function goWriterProfile() {
+            window.location.href = "writer-profile.html";
+        }
+
+        function goSettings() {
+            window.location.href = "settings.html";
+        }
+
         async function logout() {
             await supabaseClient.auth.signOut();
             window.location.reload();
         }
 
+        function setupProfileDropdown() {
+            const trigger = document.getElementById("profile-menu-trigger");
+            const dropdown = document.getElementById("profile-dropdown");
+
+            if (!trigger || !dropdown) return;
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdown.classList.toggle("open");
+            });
+
+            dropdown.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("open");
+            });
+        }
+
         async function loadHeader() {
-    const { data, error } = await supabaseClient.auth.getUser();
-    const header = document.getElementById("header-right");
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
 
-    if (error || !data.user) {
-        header.innerHTML = ``;
-        return;
-    }
+            if (error || !data.user) {
+                header.innerHTML = ``;
+                return;
+            }
 
-    const pseudo = data.user.user_metadata?.pseudo || "Mon compte";
-    const avatarUrl = data.user.user_metadata?.avatar_url || "images/default-avatar.png";
+            const user = data.user;
+            const pseudo = user.user_metadata?.pseudo || "Mon compte";
+            const avatarUrl = user.user_metadata?.avatar_url || "images/default-avatar.png";
+            const role = user.user_metadata?.role || "reader";
 
-    header.innerHTML = `
-        <button class="header-btn profile-btn profile-with-avatar" onclick="goDashboard()">
-            <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
-            <span>${pseudo}</span>
-        </button>
-        <button class="header-btn" onclick="logout()">Déconnexion</button>
-    `;
+            header.innerHTML = `
+                <div class="profile-menu-wrapper">
+                    <button
+                        class="header-btn profile-btn profile-trigger"
+                        id="profile-menu-trigger"
+                        type="button"
+                    >
+                        <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+                        <span>${pseudo}</span>
+                    </button>
 
-    document.getElementById("main-buttons").innerHTML = `
-        <button class="main-btn primary" onclick="window.location.href='dashboard.html'">
-            Accéder à mon espace
-        </button>
-        <button class="main-btn secondary" onclick="logout()">
-            Se déconnecter
-        </button>
-    `;
-}
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <button class="dropdown-item" onclick="goDashboard()">Mon espace</button>
+                        ${role === "writer" ? `<button class="dropdown-item" onclick="goWriterProfile()">Profil écrivain</button>` : ``}
+                        <button class="dropdown-item" onclick="goSettings()">Paramètres</button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" onclick="logout()">Déconnexion</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("main-buttons").innerHTML = `
+                <button class="main-btn primary" onclick="window.location.href='dashboard.html'">
+                    Accéder à mon espace
+                </button>
+            `;
+
+            setupProfileDropdown();
+        }
 
         loadHeader();
     </script>
