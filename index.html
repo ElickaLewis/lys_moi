@@ -25,43 +25,62 @@
             align-items: center;
             justify-content: center;
             padding: 30px;
+            padding-top: 110px;
             position: relative;
         }
 
-        .top-right {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
             display: flex;
             gap: 12px;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .top-right button {
+        .header-btn {
             padding: 10px 16px;
             border-radius: 12px;
             font-size: 0.95rem;
             font-family: inherit;
             cursor: pointer;
             transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
         }
 
-        .top-right .profile-btn {
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .profile-btn {
             background: rgba(20, 20, 25, 0.72);
             color: #f5f1e8;
             border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-
-        .top-right .link-btn {
-            background: transparent;
-            color: #f5f1e8;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-
-        .top-right button:hover {
-            transform: translateY(-2px);
-            opacity: 0.96;
         }
 
         .container {
@@ -152,7 +171,7 @@
 
         @media (max-width: 700px) {
             body {
-                padding-top: 90px;
+                padding-top: 100px;
             }
 
             h1 {
@@ -175,10 +194,11 @@
                 width: 100%;
             }
 
-            .top-right {
-                top: 15px;
-                right: 15px;
-                left: 15px;
+            .main-header {
+                padding: 0 15px;
+            }
+
+            .header-right {
                 justify-content: flex-end;
             }
         }
@@ -186,7 +206,12 @@
 </head>
 <body>
 
-    <div class="top-right" id="top-right-area"></div>
+    <header class="main-header">
+        <div class="header-left">
+            <span class="logo" onclick="goHome()">Lys Moi</span>
+        </div>
+        <div class="header-right" id="header-right"></div>
+    </header>
 
     <div class="container">
         <div class="top">Lys Moi</div>
@@ -211,46 +236,64 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-    const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function loadSessionUI() {
-        const { data, error } = await supabaseClient.auth.getUser();
-
-        if (error || !data.user) {
-            return;
+        function goHome() {
+            window.location.href = "index.html";
         }
 
-        const user = data.user;
-        const pseudo = user.user_metadata?.pseudo || "Mon compte";
+        function goLogin() {
+            window.location.href = "login.html";
+        }
 
-        document.getElementById("top-right-area").innerHTML = `
-            <button class="profile-btn" onclick="window.location.href='dashboard.html'">
-                👤 ${pseudo}
-            </button>
-        `;
+        function goSignup() {
+            window.location.href = "signup.html";
+        }
 
-        document.getElementById("main-buttons").innerHTML = `
-            <button class="main-btn primary" onclick="window.location.href='dashboard.html'">
-                Accéder à mon espace
-            </button>
-            <button class="main-btn secondary" onclick="logout()">
-                Se déconnecter
-            </button>
-        `;
+        function goDashboard() {
+            window.location.href = "dashboard.html";
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
+        async function loadHeader() {
+    const { data, error } = await supabaseClient.auth.getUser();
+    const header = document.getElementById("header-right");
+
+    if (error || !data.user) {
+        header.innerHTML = ``;
+        return;
     }
 
-    async function logout() {
-        await supabaseClient.auth.signOut();
-        window.location.reload();
-    }
+    const pseudo = data.user.user_metadata?.pseudo || "Mon compte";
+    const avatarUrl = data.user.user_metadata?.avatar_url || "images/default-avatar.png";
 
-    loadSessionUI();
-</script>
-    
+    header.innerHTML = `
+        <button class="header-btn profile-btn profile-with-avatar" onclick="goDashboard()">
+            <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+            <span>${pseudo}</span>
+        </button>
+        <button class="header-btn" onclick="logout()">Déconnexion</button>
+    `;
 
+    document.getElementById("main-buttons").innerHTML = `
+        <button class="main-btn primary" onclick="window.location.href='dashboard.html'">
+            Accéder à mon espace
+        </button>
+        <button class="main-btn secondary" onclick="logout()">
+            Se déconnecter
+        </button>
+    `;
+}
+
+        loadHeader();
+    </script>
 </body>
 </html>
