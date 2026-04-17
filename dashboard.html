@@ -29,7 +29,7 @@
 
         .container {
             width: 100%;
-            max-width: 700px;
+            max-width: 720px;
             text-align: center;
             background: rgba(20, 20, 25, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.10);
@@ -49,14 +49,14 @@
 
         h1 {
             font-size: 2.8rem;
-            margin: 0 0 16px;
+            margin: 0 0 14px;
             color: #fff8ee;
         }
 
         .subtitle {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             color: #ddd3c4;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .role-box {
@@ -68,7 +68,7 @@
         }
 
         .role-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #c9b08a;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -148,7 +148,7 @@
             <div class="role-text" id="role-text">Chargement...</div>
         </div>
 
-        <div class="buttons">
+        <div class="buttons" id="dashboard-buttons">
             <button class="primary" onclick="goHome()">Accueil</button>
             <button class="secondary" onclick="logout()">Se déconnecter</button>
         </div>
@@ -177,6 +177,12 @@
 
             if (role === "writer") {
                 document.getElementById("role-text").textContent = "Connecté en tant qu’Écrivain ✍️";
+
+                document.getElementById("dashboard-buttons").innerHTML = `
+                    <button class="primary" onclick="goWriterProfile()">Mon profil écrivain</button>
+                    <button class="secondary" onclick="goHome()">Accueil</button>
+                    <button class="secondary" onclick="logout()">Se déconnecter</button>
+                `;
             } else {
                 document.getElementById("role-text").textContent = "Connecté en tant que Lecteur 👀";
             }
@@ -184,6 +190,10 @@
 
         function goHome() {
             window.location.href = "index.html";
+        }
+
+        function goWriterProfile() {
+            window.location.href = "writer-profile.html";
         }
 
         async function logout() {
