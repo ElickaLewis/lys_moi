@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil écrivain - Lys Moi</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
+                url("images/background.png");
+            background-size: cover;
+            background-position: right center;
+            background-repeat: no-repeat;
+            color: #f5f1e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 28px;
+            padding: 45px 35px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .top {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .avatar-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 14px;
+            border: 3px solid rgba(240, 198, 116, 0.35);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .avatar-button {
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .avatar-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin: 0 0 12px;
+            color: #fff8ee;
+        }
+
+        .role {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(240, 198, 116, 0.12);
+            border: 1px solid rgba(240, 198, 116, 0.25);
+            color: #f0c674;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .bio {
+            max-width: 650px;
+            margin: 0 auto;
+            font-size: 1.08rem;
+            line-height: 1.7;
+            color: #ddd3c4;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 22px;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #c9b08a;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .info-line {
+            margin-bottom: 10px;
+            color: #f5f1e8;
+        }
+
+        .badge-box {
+            text-align: center;
+        }
+
+        .badge-image {
+            max-width: 220px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 14px;
+        }
+
+        .badge-name {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #f0c674;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #ddd3c4;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .edit-area {
+            display: none;
+            margin-top: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 14px;
+        }
+
+        textarea:focus {
+            box-shadow: 0 0 0 2px rgba(240, 198, 116, 0.4);
+        }
+
+        .small-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 35px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .primary {
+            background: #f0c674;
+            color: #1a1620;
+            border: none;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(240, 198, 116, 0.25);
+        }
+
+        .secondary {
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.02);
+            opacity: 0.96;
+        }
+
+        .primary:hover {
+            box-shadow: 0 15px 35px rgba(240, 198, 116, 0.4);
+        }
+
+        #save-message,
+        #avatar-message {
+            margin-top: 12px;
+            color: #f0c674;
+            min-height: 24px;
+            text-align: center;
+        }
+
+        .crop-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.82);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .crop-box {
+            width: 100%;
+            max-width: 720px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+        }
+
+        .crop-box h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #fff8ee;
+        }
+
+        .crop-image-wrapper {
+            width: 100%;
+            max-height: 420px;
+            overflow: hidden;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        #crop-image {
+            display: block;
+            max-width: 100%;
+        }
+
+        .crop-controls {
+            margin-top: 18px;
+            text-align: center;
+            color: #ddd3c4;
+        }
+
+        #zoom-range {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .crop-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top">Lys Moi</div>
+
+        <div class="header">
+            <div class="avatar-wrapper">
+                <img
+                    id="avatar-preview"
+                    class="avatar"
+                    src="images/default-avatar.png"
+                    alt="Avatar écrivain"
+                >
+
+                <input type="file" id="avatar-input" accept="image/png, image/jpeg, image/webp" style="display:none;">
+
+                <button class="avatar-button" onclick="document.getElementById('avatar-input').click()">
+                    Changer l’image
+                </button>
+
+                <p id="avatar-message"></p>
+            </div>
+
+            <h1 id="writer-name">Chargement...</h1>
+            <div class="role">Écrivain ✍️</div>
+            <p class="bio" id="writer-bio">Cette plume n’a pas encore livré ses mots.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">Identité</div>
+                <div class="info-line"><strong>Pseudo :</strong> <span id="info-pseudo">—</span></div>
+                <div class="info-line"><strong>Email :</strong> <span id="info-email">—</span></div>
+                <div class="info-line"><strong>Inscrit depuis :</strong> <span id="info-date">—</span></div>
+            </div>
+
+            <div class="card badge-box">
+                <div class="card-title">Badge actuel</div>
+                <img
+                    id="badge-image"
+                    class="badge-image"
+                    src="images/badges/encre-nouvelle.png"
+                    alt="Badge écrivain"
+                >
+                <div class="badge-name" id="badge-name">Encre nouvelle</div>
+            </div>
+
+            <div class="card" style="grid-column: 1 / -1;">
+                <div class="card-title">Ses mots</div>
+
+                <p class="quote" id="writer-words">
+                    “Les premières histoires de cette plume apparaîtront bientôt.”
+                </p>
+
+                <button class="secondary" id="edit-button" onclick="showEditArea()">
+                    Modifier
+                </button>
+
+                <div class="edit-area" id="edit-area">
+                    <textarea id="bio-input" placeholder="Écris ici ce que tu veux montrer sur ton profil..."></textarea>
+
+                    <div class="small-buttons">
+                        <button class="primary" onclick="saveBio()">Enregistrer</button>
+                        <button class="secondary" onclick="hideEditArea()">Annuler</button>
+                    </div>
+
+                    <p id="save-message"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="primary" onclick="goDashboard()">Retour au dashboard</button>
+            <button class="secondary" onclick="goHome()">Accueil</button>
+        </div>
+    </div>
+
+    <div id="crop-modal" class="crop-modal">
+        <div class="crop-box">
+            <h2>Recadrer l’image</h2>
+
+            <div class="crop-image-wrapper">
+                <img id="crop-image" src="" alt="Image à recadrer">
+            </div>
+
+            <div class="crop-controls">
+                <label for="zoom-range">Zoom</label>
+                <input type="range" id="zoom-range" min="1" max="3" step="0.01" value="1">
+            </div>
+
+            <div class="crop-buttons">
+                <button class="primary" onclick="confirmCrop()">Valider</button>
+                <button class="secondary" onclick="closeCropModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+        const BUCKET_NAME = "avatars";
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let cropper = null;
+
+        async function loadWriterProfile() {
+            const { data, error } = await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = data.user;
+
+            const pseudo = user.user_metadata?.pseudo || "Auteur";
+            const role = user.user_metadata?.role || "reader";
+            const bio = user.user_metadata?.bio || "Les premières histoires de cette plume apparaîtront bientôt.";
+            const badge = user.user_metadata?.badge || "Encre nouvelle";
+            const avatarUrl = user.user_metadata?.avatar_url || "images/default-avatar.png";
+            const email = user.email || "—";
+
+            if (role !== "writer") {
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            const createdAt = new Date(user.created_at);
+            const formattedDate = createdAt.toLocaleDateString("fr-FR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+            document.getElementById("writer-name").textContent = pseudo;
+            document.getElementById("writer-bio").textContent = bio;
+            document.getElementById("info-pseudo").textContent = pseudo;
+            document.getElementById("info-email").textContent = email;
+            document.getElementById("info-date").textContent = formattedDate;
+            document.getElementById("badge-name").textContent = badge;
+            document.getElementById("writer-words").textContent = `“${bio}”`;
+            document.getElementById("bio-input").value = bio;
+            document.getElementById("avatar-preview").src = avatarUrl;
+        }
+
+        function showEditArea() {
+            document.getElementById("edit-area").style.display = "block";
+            document.getElementById("edit-button").style.display = "none";
+        }
+
+        function hideEditArea() {
+            document.getElementById("edit-area").style.display = "none";
+            document.getElementById("edit-button").style.display = "inline-block";
+            document.getElementById("save-message").textContent = "";
+        }
+
+        async function saveBio() {
+            const newBio = document.getElementById("bio-input").value.trim();
+            const saveMessage = document.getElementById("save-message");
+
+            saveMessage.textContent = "Enregistrement...";
+
+            const { data, error: userError } = await supabaseClient.auth.getUser();
+
+            if (userError || !data.user) {
+                saveMessage.textContent = "Impossible de récupérer l’utilisateur.";
+                return;
+            }
+
+            const currentMetadata = data.user.user_metadata || {};
+
+            const { error } = await supabaseClient.auth.updateUser({
+                data: {
+                    ...currentMetadata,
+                    bio: newBio
+                }
+            });
+
+            if (error) {
+                saveMessage.textContent = "Erreur : " + error.message;
+                return;
+            }
+
+            document.getElementById("writer-bio").textContent = newBio || "Cette plume n’a pas encore livré ses mots.";
+            document.getElementById("writer-words").textContent = `“${newBio || "Cette plume n’a pas encore livré ses mots."}”`;
+
+            saveMessage.textContent = "Modifications enregistrées 🎉";
+
+            setTimeout(() => {
+                hideEditArea();
+            }, 800);
+        }
+
+        function handleAvatarSelection(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const cropImage = document.getElementById("crop-image");
+                cropImage.src = e.target.result;
+
+                document.getElementById("crop-modal").style.display = "flex";
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    dragMode: "move",
+                    autoCropArea: 1,
+                    background: false,
+                    guides: false,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: false,
+                    cropBoxResizable: false,
+                    toggleDragModeOnDblclick: false
+                });
+
+                document.getElementById("zoom-range").value = 1;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function handleZoom(event) {
+            if (!cropper) return;
+            const zoomValue = parseFloat(event.target.value);
+            cropper.zoomTo(zoomValue);
+        }
+
+        function closeCropModal() {
+            document.getElementById("crop-modal").style.display = "none";
+            document.getElementById("avatar-input").value = "";
+
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        }
+
+        async function confirmCrop() {
+            const avatarMessage = document.getElementById("avatar-message");
+
+            if (!cropper) return;
+
+            avatarMessage.textContent = "Préparation de l’image...";
+
+            const canvas = cropper.getCroppedCanvas({
+                width: 500,
+                height: 500,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: "high"
+            });
+
+            if (!canvas) {
+                avatarMessage.textContent = "Impossible de recadrer l’image.";
+                return;
+            }
+
+            canvas.toBlob(async (blob) => {
+                if (!blob) {
+                    avatarMessage.textContent = "Impossible de créer l’image finale.";
+                    return;
+                }
+
+                avatarMessage.textContent = "Upload en cours...";
+
+                const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+
+                if (userError || !userData.user) {
+                    avatarMessage.textContent = "Utilisateur introuvable.";
+                    return;
+                }
+
+                const user = userData.user;
+                const filePath = `${user.id}.png`;
+
+                const { error: uploadError } = await supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .upload(filePath, blob, {
+                        upsert: true,
+                        contentType: "image/png"
+                    });
+
+                if (uploadError) {
+                    avatarMessage.textContent = "Erreur upload : " + uploadError.message;
+                    return;
+                }
+
+                const { data: publicUrlData } = supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .getPublicUrl(filePath);
+
+                const avatarUrl = publicUrlData.publicUrl + `?t=${Date.now()}`;
+                const currentMetadata = user.user_metadata || {};
+
+                const { error: updateError } = await supabaseClient.auth.updateUser({
+                    data: {
+                        ...currentMetadata,
+                        avatar_url: avatarUrl
+                    }
+                });
+
+                if (updateError) {
+                    avatarMessage.textContent = "Erreur profil : " + updateError.message;
+                    return;
+                }
+
+                document.getElementById("avatar-preview").src = avatarUrl;
+                avatarMessage.textContent = "Image de profil mise à jour 🎉";
+
+                closeCropModal();
+            }, "image/png");
+        }
+
+        function goDashboard() {
+            window.location.href = "dashboard.html";
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("avatar-input").addEventListener("change", handleAvatarSelection);
+        document.getElementById("zoom-range").addEventListener("input", handleZoom);
+
+        loadWriterProfile();
+    </script>
+</body>
+</html>
