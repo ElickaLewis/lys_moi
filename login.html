@@ -25,6 +25,61 @@
             align-items: center;
             justify-content: center;
             padding: 30px;
+            padding-top: 110px;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            color: #f5f1e8;
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         .container {
@@ -134,10 +189,27 @@
             color: #f0c674;
             min-height: 24px;
         }
+
+        @media (max-width: 700px) {
+            body {
+                padding-top: 100px;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+        }
     </style>
 </head>
 
 <body>
+
+    <header class="main-header">
+        <div class="header-left">
+            <span class="logo" onclick="goHome()">Lys Moi</span>
+        </div>
+        <div class="header-right" id="header-right"></div>
+    </header>
 
     <div class="container">
         <div class="top">Lys Moi</div>
@@ -173,50 +245,102 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-    const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const form = document.getElementById("login-form");
-    const message = document.getElementById("message");
-
-    form.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        message.textContent = "Connexion en cours...";
-
-        const { error } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-        if (error) {
-            message.textContent = "Erreur : " + error.message;
-            return;
+        function goHome() {
+            window.location.href = "index.html";
         }
 
-        message.textContent = "Connexion réussie 🎉";
+        function goLogin() {
+            window.location.href = "login.html";
+        }
 
-        setTimeout(() => {
-            window.location.href = "dashboard.html";
-        }, 700);
-    });
+        function goSignup() {
+            window.location.href = "signup.html";
+        }
 
-    async function checkExistingSession() {
-        const { data } = await supabaseClient.auth.getSession();
-
-        if (data.session) {
+        function goDashboard() {
             window.location.href = "dashboard.html";
         }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+        }
+
+        async function loadHeader() {
+    const { data, error } = await supabaseClient.auth.getUser();
+    const header = document.getElementById("header-right");
+
+    if (error || !data.user) {
+        header.innerHTML = ``;
+        return;
     }
 
-    checkExistingSession();
-</script>
+    const pseudo = data.user.user_metadata?.pseudo || "Mon compte";
+    const avatarUrl = data.user.user_metadata?.avatar_url || "images/default-avatar.png";
+
+    header.innerHTML = `
+        <button class="header-btn profile-btn profile-with-avatar" onclick="goDashboard()">
+            <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+            <span>${pseudo}</span>
+        </button>
+        <button class="header-btn" onclick="logout()">Déconnexion</button>
+    `;
+
+    document.getElementById("main-buttons").innerHTML = `
+        <button class="main-btn primary" onclick="window.location.href='dashboard.html'">
+            Accéder à mon espace
+        </button>
+        <button class="main-btn secondary" onclick="logout()">
+            Se déconnecter
+        </button>
+    `;
+}
+
+        const form = document.getElementById("login-form");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            message.textContent = "Connexion en cours...";
+
+            const { error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                message.textContent = "Erreur : " + error.message;
+                return;
+            }
+
+            message.textContent = "Connexion réussie 🎉";
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 700);
+        });
+
+        async function checkExistingSession() {
+            const { data } = await supabaseClient.auth.getSession();
+
+            if (data.session) {
+                window.location.href = "dashboard.html";
+            }
+        }
+
+        loadHeader();
+        checkExistingSession();
+    </script>
 
 </body>
 </html>
