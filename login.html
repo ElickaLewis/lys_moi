@@ -14,14 +14,12 @@
             margin: 0;
             min-height: 100vh;
             font-family: Georgia, "Times New Roman", serif;
-
             background:
                 linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
                 url("images/background.png");
             background-size: cover;
             background-position: right center;
             background-repeat: no-repeat;
-
             color: #f5f1e8;
             display: flex;
             align-items: center;
@@ -55,34 +53,64 @@
             color: #fff8ee;
         }
 
-        input {
+        .field {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            color: #ddd3c4;
+            font-size: 0.95rem;
+        }
+
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
             padding: 12px;
-            margin-bottom: 18px;
             border-radius: 10px;
             border: none;
             font-size: 1rem;
             outline: none;
         }
 
-        input:focus {
+        input[type="email"]:focus,
+        input[type="password"]:focus {
             box-shadow: 0 0 0 2px rgba(240, 198, 116, 0.4);
+        }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 6px 0 18px;
+            text-align: left;
+            color: #ddd3c4;
+            font-size: 0.95rem;
+        }
+
+        .remember-row input {
+            margin: 0;
+            transform: scale(1.1);
         }
 
         button {
             width: 100%;
             padding: 14px;
             border-radius: 12px;
-            border: none;
             font-size: 1rem;
+            font-family: inherit;
             cursor: pointer;
-            margin-top: 10px;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
         }
 
         .primary {
             background: #f0c674;
             color: #1a1620;
+            border: none;
             font-weight: bold;
+            box-shadow: 0 10px 25px rgba(240, 198, 116, 0.25);
         }
 
         .secondary {
@@ -97,9 +125,14 @@
             opacity: 0.95;
         }
 
+        .primary:hover {
+            box-shadow: 0 15px 35px rgba(240, 198, 116, 0.35);
+        }
+
         #message {
             margin-top: 15px;
             color: #f0c674;
+            min-height: 24px;
         }
     </style>
 </head>
@@ -112,8 +145,20 @@
         <h1>Se connecter 🔐</h1>
 
         <form id="login-form">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Mot de passe" required>
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Votre email" required>
+            </div>
+
+            <div class="field">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" placeholder="Votre mot de passe" required>
+            </div>
+
+            <label class="remember-row" for="remember">
+                <input type="checkbox" id="remember" checked>
+                <span>Rester connecté</span>
+            </label>
 
             <button class="primary" type="submit">
                 Connexion
@@ -128,42 +173,50 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+<script>
+    const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const form = document.getElementById("login-form");
-        const message = document.getElementById("message");
+    const form = document.getElementById("login-form");
+    const message = document.getElementById("message");
 
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-            message.textContent = "Connexion en cours...";
+        message.textContent = "Connexion en cours...";
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
-
-            if (error) {
-                message.textContent = "Erreur : " + error.message;
-            } else {
-                message.textContent = "Connexion réussie 🎉";
-
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1000);
-            }
+        const { error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
         });
-    </script>
 
-</body>
-</html>
+        if (error) {
+            message.textContent = "Erreur : " + error.message;
+            return;
+        }
+
+        message.textContent = "Connexion réussie 🎉";
+
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 700);
+    });
+
+    async function checkExistingSession() {
+        const { data } = await supabaseClient.auth.getSession();
+
+        if (data.session) {
+            window.location.href = "dashboard.html";
+        }
+    }
+
+    checkExistingSession();
+</script>
 
 </body>
 </html>
