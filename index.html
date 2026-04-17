@@ -14,19 +14,54 @@
             margin: 0;
             min-height: 100vh;
             font-family: Georgia, "Times New Roman", serif;
-
             background:
                 linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
                 url("images/background.png");
             background-size: cover;
             background-position: right center;
             background-repeat: no-repeat;
-
             color: #f5f1e8;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 30px;
+            position: relative;
+        }
+
+        .top-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .top-right button {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .top-right .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            color: #f5f1e8;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .top-right .link-btn {
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .top-right button:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
         }
 
         .container {
@@ -81,7 +116,7 @@
             flex-wrap: wrap;
         }
 
-        button {
+        .main-btn {
             padding: 14px 26px;
             border-radius: 14px;
             font-size: 1rem;
@@ -104,7 +139,9 @@
             border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
-        button:hover {
+        .main-btn:hover,
+        .primary:hover,
+        .secondary:hover {
             transform: translateY(-3px) scale(1.02);
             opacity: 0.96;
         }
@@ -114,6 +151,10 @@
         }
 
         @media (max-width: 700px) {
+            body {
+                padding-top: 90px;
+            }
+
             h1 {
                 font-size: 2.3rem;
             }
@@ -130,13 +171,22 @@
                 flex-direction: column;
             }
 
-            button {
+            .main-btn {
                 width: 100%;
+            }
+
+            .top-right {
+                top: 15px;
+                right: 15px;
+                left: 15px;
+                justify-content: flex-end;
             }
         }
     </style>
 </head>
 <body>
+
+    <div class="top-right" id="top-right-area"></div>
 
     <div class="container">
         <div class="top">Lys Moi</div>
@@ -149,16 +199,58 @@
             aux histoires qu’on ignore trop souvent.
         </p>
 
-        <div class="buttons">
-            <button class="primary" onclick="window.location.href='signup.html'">
+        <div class="buttons" id="main-buttons">
+            <button class="main-btn primary" onclick="window.location.href='signup.html'">
                 ✍️ Créer un compte
             </button>
 
-            <button class="secondary" onclick="window.location.href='login.html'">
+            <button class="main-btn secondary" onclick="window.location.href='login.html'">
                 🔐 Se connecter
             </button>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadSessionUI() {
+        const { data, error } = await supabaseClient.auth.getUser();
+
+        if (error || !data.user) {
+            return;
+        }
+
+        const user = data.user;
+        const pseudo = user.user_metadata?.pseudo || "Mon compte";
+
+        document.getElementById("top-right-area").innerHTML = `
+            <button class="profile-btn" onclick="window.location.href='dashboard.html'">
+                👤 ${pseudo}
+            </button>
+        `;
+
+        document.getElementById("main-buttons").innerHTML = `
+            <button class="main-btn primary" onclick="window.location.href='dashboard.html'">
+                Accéder à mon espace
+            </button>
+            <button class="main-btn secondary" onclick="logout()">
+                Se déconnecter
+            </button>
+        `;
+    }
+
+    async function logout() {
+        await supabaseClient.auth.signOut();
+        window.location.reload();
+    }
+
+    loadSessionUI();
+</script>
+    
 
 </body>
 </html>
