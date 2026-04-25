@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture - Lys Moi</title>
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/reader-dashboard.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="reader-shell">
+        <section class="reader-hero">
+            <div class="topline">Lecture</div>
+            <h1 id="reader-title">Bienvenue</h1>
+            <p class="reader-subtitle" id="reader-subtitle">
+                Chargement de ton espace de lecture...
+            </p>
+
+            <div class="reader-hero-actions">
+                <button class="reader-btn reader-btn-primary" onclick="goExplorer()">
+                    Explorer le jardin
+                </button>
+
+                <button class="reader-btn reader-btn-secondary" onclick="readerPlaceholder('Bibliothèque personnelle')">
+                    Ma bibliothèque
+                </button>
+            </div>
+        </section>
+
+        <section class="reader-section">
+            <div class="reader-section-header">
+                <div>
+                    <h2>Reprendre ma lecture</h2>
+                    <p>
+                        Retrouve ici les œuvres que tu as déjà ouvertes, avec un petit éclat
+                        lorsqu’un nouveau chapitre t’attend.
+                    </p>
+                </div>
+
+                <button class="reader-link-btn" type="button" onclick="readerPlaceholder('Historique complet de lecture')">
+                    Voir tout
+                </button>
+            </div>
+
+            <div class="reading-grid" id="reading-grid"></div>
+        </section>
+
+        <section class="reader-section">
+            <div class="reader-section-header">
+                <div>
+                    <h2>À découvrir</h2>
+                    <p>
+                        Quelques portes entrouvertes pour te donner envie de poursuivre ta promenade.
+                    </p>
+                </div>
+
+                <button class="reader-link-btn" type="button" onclick="goExplorer()">
+                    Explorer davantage
+                </button>
+            </div>
+
+            <div class="discover-grid" id="discover-grid"></div>
+        </section>
+
+        <section class="reader-section">
+            <div class="reader-section-header">
+    <div>
+        <h2>Réponses à mes mots</h2>
+        <p>
+            Les réponses laissées sous les commentaires que tu as déposés.
+            Les échos qui te sont directement adressés.
+        </p>
+    </div>
+
+    <button class="reader-link-btn" type="button" onclick="readerPlaceholder('Toutes les réponses à mes commentaires')">
+        Voir tout
+    </button>
+</div>
+
+            <div class="updates-list" id="replies-list"></div>
+        </section>
+
+        <section class="reader-section">
+            <div class="reader-section-header">
+                <div>
+                    <h2>Échos du jardin</h2>
+                    <p>
+                        Les dernières nouvelles du lieu, les retours laissés par les lecteurs,
+                        et les mouvements qui donnent vie à Lys Moi.
+                    </p>
+                </div>
+            </div>
+
+            <div class="updates-list" id="updates-list"></div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/pages/reader-dashboard.js"></script>
+</body>
+</html>

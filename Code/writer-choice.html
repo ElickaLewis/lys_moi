@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choisir un élan - Lys Moi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.80)),
+                url("images/background.png");
+            background-size: cover;
+            background-position: right center;
+            background-repeat: no-repeat;
+            color: #f5f1e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            padding-top: 110px;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-menu-wrapper {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2000;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1040px;
+        }
+
+        .intro-box {
+            text-align: center;
+            background: rgba(20, 20, 25, 0.66);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 30px;
+            padding: 42px 28px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .top {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.9rem;
+            margin: 0 0 14px;
+            color: #fff8ee;
+        }
+
+        .subtitle {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #ddd3c4;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .choice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-top: 28px;
+        }
+
+        .choice-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 26px;
+            padding: 28px;
+            text-align: left;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .choice-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 38px rgba(0,0,0,0.26);
+            border-color: rgba(240, 198, 116, 0.22);
+        }
+
+        .choice-kicker {
+            font-size: 0.82rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .choice-title {
+            font-size: 1.8rem;
+            color: #fff8ee;
+            margin: 0 0 12px;
+        }
+
+        .choice-text {
+            color: #ddd3c4;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            min-height: 110px;
+        }
+
+        .main-btn {
+            padding: 14px 22px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .primary {
+            background: #f0c674;
+            color: #1a1620;
+            border: none;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(240, 198, 116, 0.25);
+        }
+
+        .secondary {
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        .main-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .primary:hover {
+            box-shadow: 0 15px 35px rgba(240, 198, 116, 0.38);
+        }
+
+        @media (max-width: 900px) {
+            .choice-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .choice-text {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding-top: 100px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .intro-box {
+                padding: 30px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="container">
+        <section class="intro-box">
+            <div class="top">Lys Moi</div>
+            <h1 id="choice-title">Bienvenue</h1>
+            <p class="subtitle" id="choice-subtitle">
+                Souhaites-tu retrouver ta plume, ou te laisser porter par les mots des autres ?
+            </p>
+
+            <div class="choice-grid">
+                <article class="choice-card">
+                    <div class="choice-kicker">Écriture</div>
+                    <h2 class="choice-title">Retrouver ma plume</h2>
+                    <p class="choice-text">
+                        Revenir à ton atelier, reprendre tes élans, retrouver tes brouillons
+                        et préparer les histoires que tu veux offrir au monde.
+                    </p>
+                    <button class="main-btn primary" onclick="goWriterDashboard()">
+                        Entrer dans l’atelier
+                    </button>
+                </article>
+
+                <article class="choice-card">
+                    <div class="choice-kicker">Lecture</div>
+                    <h2 class="choice-title">Me laisser porter par les mots</h2>
+                    <p class="choice-text">
+                        Ouvrir l’espace de lecture, découvrir d’autres voix, feuilleter,
+                        explorer, et te laisser toucher par les histoires des autres.
+                    </p>
+                    <button class="main-btn secondary" onclick="goReaderSpace()">
+                        Ouvrir le salon de lecture
+                    </button>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function goHome() { window.location.href = "index.html"; }
+        function goLogin() { window.location.href = "login.html"; }
+        function goSignup() { window.location.href = "signup.html"; }
+        function goDashboard() { window.location.href = "dashboard.html"; }
+        function goWriterDashboard() { window.location.href = "writer-dashboard.html"; }
+        function goWriterProfile() { window.location.href = "writer-profile.html"; }
+        function goSettings() { window.location.href = "settings.html"; }
+
+        function goReaderSpace() {
+            window.location.href = "index.html";
+            // plus tard :
+            // window.location.href = "reader-dashboard.html";
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+        }
+
+        function setupProfileDropdown() {
+            const trigger = document.getElementById("profile-menu-trigger");
+            const dropdown = document.getElementById("profile-dropdown");
+            if (!trigger || !dropdown) return;
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdown.classList.toggle("open");
+            });
+
+            dropdown.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("open");
+            });
+        }
+
+        async function loadHeader() {
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = data.user;
+            const pseudo = user.user_metadata?.pseudo || "Mon compte";
+            const avatarUrl = user.user_metadata?.avatar_url || "images/default-avatar.png";
+            const role = user.user_metadata?.role || "reader";
+
+            header.innerHTML = `
+                <button class="header-btn" onclick="goHome()">Accueil</button>
+
+                <div class="profile-menu-wrapper">
+                    <button
+                        class="header-btn profile-btn profile-trigger"
+                        id="profile-menu-trigger"
+                        type="button"
+                    >
+                        <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+                        <span>${pseudo}</span>
+                    </button>
+
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <button class="dropdown-item" onclick="goDashboard()">Mon espace</button>
+                        ${role === "writer" ? `<button class="dropdown-item" onclick="goWriterProfile()">Profil écrivain</button>` : ``}
+                        <button class="dropdown-item" onclick="goSettings()">Paramètres</button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" onclick="logout()">Déconnexion</button>
+                    </div>
+                </div>
+            `;
+
+            setupProfileDropdown();
+        }
+
+        async function protectWriterChoice() {
+            const { data, error } = await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = data.user;
+            const pseudo = user.user_metadata?.pseudo || "Écrivain";
+            const role = user.user_metadata?.role || "reader";
+
+            if (role !== "writer") {
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            document.getElementById("choice-title").textContent = `Bienvenue ${pseudo} ✍️`;
+        }
+
+        loadHeader();
+        protectWriterChoice();
+    </script>
+</body>
+</html>

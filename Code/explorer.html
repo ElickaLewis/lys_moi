@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorer le jardin - Lys Moi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.82)),
+                url("images/background.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #f5f1e8;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-menu-wrapper {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2000;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: auto;
+            padding: 100px 24px 40px;
+        }
+
+        .hero-box {
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 28px;
+            padding: 34px 32px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.30);
+            margin-bottom: 24px;
+        }
+
+        .topline {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            color: #f0c674;
+            font-size: 2.7rem;
+            line-height: 1.1;
+        }
+
+        .hero-text {
+            color: #ddd3c4;
+            line-height: 1.8;
+            max-width: 760px;
+            margin-bottom: 22px;
+        }
+
+        .search-bar {
+            width: 100%;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px 16px;
+            border-radius: 14px;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.08);
+            color: #f5f1e8;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(245, 241, 232, 0.58);
+        }
+
+        .search-bar input:focus {
+            box-shadow: 0 0 0 2px rgba(240, 198, 116, 0.30);
+        }
+
+        .main-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .category-card {
+            position: relative;
+            min-height: 180px;
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255,255,255,0.10);
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 26px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 18px 42px rgba(0,0,0,0.26);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(240, 198, 116, 0.22);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .category-card h2 {
+            margin: 0 0 10px;
+            color: #f0c674;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-card p {
+            margin: 0;
+            opacity: 0.82;
+            line-height: 1.7;
+            position: relative;
+            z-index: 2;
+            color: #ddd3c4;
+        }
+
+        .category-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.25));
+            z-index: 1;
+        }
+
+        .special {
+            border: 1px solid rgba(240,198,116,0.35);
+        }
+
+        @media (max-width: 850px) {
+            .main-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 90px 16px 30px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="container">
+        <section class="hero-box">
+            <div class="topline">Explorer</div>
+            <h1>🌿 Explorer le jardin</h1>
+            <p class="hero-text">
+                Laisse-toi guider par les chemins du jardin, ou choisis simplement une direction.
+                Chaque porte ouvre un autre visage de Lys Moi.
+            </p>
+
+            <div class="search-bar">
+                <input type="text" placeholder="Rechercher une œuvre, un auteur, un tag...">
+            </div>
+        </section>
+
+        <section class="main-categories">
+            <article class="category-card" onclick="openCategory('original')">
+                <div class="category-overlay"></div>
+                <h2>🖋️ Œuvres originales</h2>
+                <p>Des univers entièrement créés par leurs auteurs, classés par thèmes.</p>
+            </article>
+
+            <article class="category-card" onclick="openCategory('fanfiction')">
+                <div class="category-overlay"></div>
+                <h2>🌌 Fanfiction</h2>
+                <p>Des histoires inspirées d’univers existants, à redécouvrir autrement.</p>
+            </article>
+
+            <article class="category-card special" onclick="openCategory('elus')">
+                <div class="category-overlay"></div>
+                <h2>🌿 Les Élus du Lys</h2>
+                <p>Les œuvres choisies avec soin, pour leur voix, leur présence, ou leur éclat.</p>
+            </article>
+
+            <article class="category-card" onclick="openCategory('discover')">
+                <div class="category-overlay"></div>
+                <h2>✨ À découvrir</h2>
+                <p>Laisse-toi surprendre par des plumes nouvelles, des élans inattendus, des rencontres.</p>
+            </article>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function goHome() { window.location.href = "index.html"; }
+        function goLogin() { window.location.href = "login.html"; }
+        function goSignup() { window.location.href = "signup.html"; }
+        function goDashboard() { window.location.href = "dashboard.html"; }
+        function goWriterProfile() { window.location.href = "writer-profile.html"; }
+        function goSettings() { window.location.href = "settings.html"; }
+
+        function switchMode(mode) {
+            sessionStorage.setItem("active_mode", mode);
+
+            if (mode === "reader") {
+                window.location.href = "reader-dashboard.html";
+                return;
+            }
+
+            if (mode === "writer") {
+                window.location.href = "writer-dashboard.html";
+                return;
+            }
+
+            if (mode === "admin") {
+                window.location.href = "admin-dashboard.html";
+                return;
+            }
+        }
+
+        function openCategory(type) {
+            if (type === "original") {
+                window.location.href = "original.html";
+                return;
+            }
+
+            if (type === "fanfiction") {
+                window.location.href = "fanfiction.html";
+                return;
+            }
+
+            if (type === "elus") {
+                alert("Les Élus du Lys bientôt disponibles 🌿");
+                return;
+            }
+
+            if (type === "discover") {
+                alert("À découvrir bientôt disponible ✨");
+                return;
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            sessionStorage.removeItem("active_mode");
+            window.location.href = "index.html";
+        }
+
+        function setupProfileDropdown() {
+            const trigger = document.getElementById("profile-menu-trigger");
+            const dropdown = document.getElementById("profile-dropdown");
+            if (!trigger || !dropdown) return;
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdown.classList.toggle("open");
+            });
+
+            dropdown.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("open");
+            });
+        }
+
+        async function loadHeader() {
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
+
+            if (error || !data.user) {
+                header.innerHTML = `
+                    <button class="header-btn" onclick="goLogin()">Connexion</button>
+                    <button class="header-btn" onclick="goSignup()">Inscription</button>
+                `;
+                return;
+            }
+
+            const user = data.user;
+            const metadata = user.user_metadata || {};
+
+            const pseudo = metadata.pseudo || "Mon compte";
+            const avatarUrl = metadata.avatar_url || "images/default-avatar.png";
+
+            const roles = Array.isArray(metadata.roles)
+                ? metadata.roles
+                : (metadata.role ? [metadata.role] : ["reader"]);
+
+            const canRead = roles.includes("reader");
+            const canWrite = roles.includes("writer");
+            const canAdmin = roles.includes("admin");
+
+            let switchButtons = "";
+
+            if (canRead) {
+                switchButtons += `
+                    <button class="header-btn" onclick="switchMode('reader')">
+                        Jardin des mots
+                    </button>
+                `;
+            }
+
+            if (canWrite) {
+                switchButtons += `
+                    <button class="header-btn" onclick="switchMode('writer')">
+                        Écriture
+                    </button>
+                `;
+            }
+
+            if (canAdmin) {
+                switchButtons += `
+                    <button class="header-btn" onclick="switchMode('admin')">
+                        Administration
+                    </button>
+                `;
+            }
+
+            header.innerHTML = `
+                ${switchButtons}
+
+                <div class="profile-menu-wrapper">
+                    <button
+                        class="header-btn profile-btn profile-trigger"
+                        id="profile-menu-trigger"
+                        type="button"
+                    >
+                        <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+                        <span>${pseudo}</span>
+                    </button>
+
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <button class="dropdown-item" onclick="goDashboard()">Mon espace</button>
+                        ${canWrite ? `<button class="dropdown-item" onclick="goWriterProfile()">Profil écrivain</button>` : ``}
+                        <button class="dropdown-item" onclick="goSettings()">Paramètres</button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" onclick="logout()">Déconnexion</button>
+                    </div>
+                </div>
+            `;
+
+            setupProfileDropdown();
+        }
+
+        loadHeader();
+    </script>
+
+</body>
+</html>

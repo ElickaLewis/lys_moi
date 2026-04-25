@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="fFc5D7KLsq-Hne3AdAYjHV1PVryBhVsCuE9LniG9R1o">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lys Moi</title>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="canonical" href="https://lys-moi.com/">
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/home.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="home-shell">
+        <section class="home-card">
+            <div class="topline">Lys Moi</div>
+
+            <h1>Laissez vos mots éclore ✍️</h1>
+
+            <p class="home-subtitle">
+                Un espace pour <span class="highlight">publier</span>,
+                <span class="highlight">être lu</span>, et offrir une voix
+                aux histoires qu’on ignore trop souvent.
+            </p>
+
+            <p class="home-message">
+                Lys Moi est encore en train de s’écrire…
+                Certaines pages prennent forme, d’autres arrivent bientôt.
+                Merci d’être là, au tout début de l’histoire. 🌿
+            </p>
+
+            <div class="home-buttons" id="main-buttons">
+                <button class="main-btn primary-btn" onclick="goSignup()">
+                    ✍️ Créer un compte
+                </button>
+
+                <button class="main-btn secondary-btn" onclick="goLogin()">
+                    🔐 Se connecter
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/pages/home.js"></script>
+</body>
+</html>

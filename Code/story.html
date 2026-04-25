@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture - Lys Moi</title>
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/story.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="story-shell">
+        <div id="story-loading" class="story-info-box">
+            Chargement de l’œuvre...
+        </div>
+
+        <div id="story-error" class="story-info-box story-error-box" style="display:none;">
+            Impossible de charger cette histoire.
+        </div>
+
+        <div id="story-layout" class="story-layout" style="display:none;">
+            <aside class="story-sidebar">
+                <div class="story-sidebar-scroll">
+                    <section class="story-card">
+                        <button class="story-back-link" type="button" onclick="goReaderDashboard()">
+                            ← Retour à la lecture
+                        </button>
+                    </section>
+
+                    <section class="story-card">
+                        <div class="story-cover-box" id="story-cover-box">
+                            <div class="story-cover-placeholder">Couverture</div>
+                        </div>
+
+                        <div class="story-topline">Lecture</div>
+                        <h1 class="story-sidebar-title" id="story-title">Titre</h1>
+                        <div class="story-author-line" id="story-author">par —</div>
+
+                        <div class="story-meta-row" id="story-meta-row"></div>
+                        <div class="story-tags-row" id="story-tags-row"></div>
+                    </section>
+
+                    <section class="story-card">
+                        <div class="story-block-title">Résumé</div>
+                        <p class="story-summary" id="story-summary">
+                            Chargement du résumé...
+                        </p>
+                    </section>
+
+                    <section class="story-card">
+                        <div class="story-block-title">Confort de lecture</div>
+
+                        <div class="font-size-row">
+                            <button class="story-mini-btn" type="button" onclick="decreaseStoryFontSize()">A−</button>
+                            <div class="font-size-display" id="font-size-display">20 px</div>
+                            <button class="story-mini-btn" type="button" onclick="increaseStoryFontSize()">A+</button>
+                        </div>
+
+                        <button class="story-fullscreen-btn" type="button" onclick="toggleReaderFullscreen()">
+                            Plein écran
+                        </button>
+
+                        <p class="story-controls-note">
+                            Ajuste la taille du texte pour lire à ton rythme.
+                        </p>
+                    </section>
+
+                    <section class="story-card">
+                        <div class="story-block-title">Sommaire</div>
+                        <div class="story-chapters-list" id="story-chapters-list"></div>
+                    </section>
+                </div>
+            </aside>
+
+            <section class="story-reader-panel">
+                <div class="story-reader-scroll">
+                    <article class="story-reader-page">
+                        <div class="story-reader-inner">
+                            <div class="story-reader-topline">Lys Moi</div>
+                            <h2 class="story-reader-title" id="reader-story-title">Titre</h2>
+                            <div class="story-reader-subtitle" id="reader-story-subtitle">par —</div>
+                            <div class="story-reader-divider"></div>
+
+                            <div class="story-reader-content" id="story-reader-content"></div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/pages/story.js"></script>
+</body>
+</html>

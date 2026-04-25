@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Lys Moi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
+                url("images/background.png");
+            background-size: cover;
+            background-position: right center;
+            background-repeat: no-repeat;
+            color: #f5f1e8;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 30px;
+            padding-top: 110px;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-menu-wrapper {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2000;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
+        }
+
+        .admin-shell {
+            width: 100%;
+            max-width: 1240px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .admin-sidebar,
+        .admin-content {
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 28px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .admin-sidebar {
+            padding: 24px 18px;
+            position: sticky;
+            top: 95px;
+        }
+
+        .admin-content {
+            padding: 36px 34px;
+            min-height: 680px;
+        }
+
+        .sidebar-title {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            padding: 0 10px;
+        }
+
+        .sidebar-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 14px 16px;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .sidebar-item.active {
+            background: rgba(240, 198, 116, 0.12);
+            border: 1px solid rgba(240, 198, 116, 0.20);
+            color: #f0c674;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-kicker {
+            font-size: 0.82rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .panel h1 {
+            margin: 0 0 14px;
+            font-size: 2.4rem;
+            color: #fff8ee;
+        }
+
+        .panel-subtitle {
+            color: #ddd3c4;
+            line-height: 1.7;
+            max-width: 760px;
+            margin-bottom: 28px;
+            font-size: 1.02rem;
+        }
+
+        .admin-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px;
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .admin-card h2 {
+            margin: 0 0 10px;
+            font-size: 1.22rem;
+            color: #fff8ee;
+        }
+
+        .admin-card p {
+            margin: 0;
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .stat-box {
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .stat-label {
+            color: #c9b08a;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff8ee;
+            margin-bottom: 4px;
+        }
+
+        .stat-note {
+            color: #ddd3c4;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .list-box {
+            display: grid;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            flex-wrap: wrap;
+        }
+
+        .list-main {
+            flex: 1 1 420px;
+            min-width: 220px;
+        }
+
+        .list-title {
+            color: #fff8ee;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .list-meta {
+            color: #c9b08a;
+            font-size: 0.92rem;
+            margin-bottom: 8px;
+        }
+
+        .list-text {
+            color: #ddd3c4;
+            line-height: 1.65;
+        }
+
+        .list-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .mini-btn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.20);
+            background: transparent;
+            color: #f5f1e8;
+            transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+        }
+
+        .mini-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.05);
+            opacity: 0.97;
+        }
+
+        .mini-btn.primary {
+            background: #f0c674;
+            color: #1a1620;
+            border: none;
+            font-weight: bold;
+        }
+
+        .mini-btn.primary:hover {
+            background: #f2cd82;
+        }
+
+        .mini-btn.danger {
+            border-color: rgba(255,120,120,0.30);
+            color: #ffd0d0;
+        }
+
+        .mini-btn.danger:hover {
+            background: rgba(120, 20, 20, 0.18);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.05);
+            color: #ddd3c4;
+        }
+
+        .pill-alert {
+            color: #ffd4a8;
+            border-color: rgba(240, 198, 116, 0.22);
+            background: rgba(240, 198, 116, 0.10);
+        }
+
+        .pill-safe {
+            color: #d8f0df;
+            border-color: rgba(120, 220, 160, 0.20);
+            background: rgba(120, 220, 160, 0.08);
+        }
+
+        .empty-box {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed rgba(255,255,255,0.12);
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .feedback {
+            margin-top: 14px;
+            min-height: 22px;
+            color: #f0c674;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 980px) {
+            .admin-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-sidebar {
+                position: static;
+            }
+
+            .admin-content {
+                min-height: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .panel h1 {
+                font-size: 2rem;
+            }
+
+            body {
+                padding-top: 100px;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-actions,
+            .list-actions {
+                width: 100%;
+            }
+
+            .header-right {
+                gap: 8px;
+            }
+
+            .header-btn {
+                padding: 9px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <div class="sidebar-title">Administration</div>
+
+            <div class="sidebar-group">
+                <button class="sidebar-item active" data-panel="overview-panel" onclick="showPanel('overview-panel', this)">
+                    Vue d’ensemble
+                </button>
+
+                <button class="sidebar-item" data-panel="reports-panel" onclick="showPanel('reports-panel', this)">
+                    Signalements
+                </button>
+
+                <button class="sidebar-item" data-panel="stories-panel" onclick="showPanel('stories-panel', this)">
+                    Œuvres
+                </button>
+
+                <button class="sidebar-item" data-panel="users-panel" onclick="showPanel('users-panel', this)">
+                    Utilisateurs
+                </button>
+
+                <button class="sidebar-item" data-panel="support-panel" onclick="showPanel('support-panel', this)">
+                    Support
+                </button>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <section class="panel active" id="overview-panel">
+                <div class="panel-kicker">Vue d’ensemble</div>
+                <h1 id="admin-title">Administration</h1>
+                <p class="panel-subtitle" id="admin-subtitle">
+                    Chargement de ton espace d’administration...
+                </p>
+
+                <div class="admin-card">
+                    <h2>Le jardin sous ton regard</h2>
+                    <p>
+                        Ici, tu peux suivre l’état général de Lys Moi, voir les points sensibles,
+                        et agir rapidement sans te noyer dans une interface lourde.
+                    </p>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Signalements en attente</div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-note">Les contenus à vérifier apparaîtront ici.</div>
+                        </div>
+
+                        <div class="stat-box">
+                            <div class="stat-label">Demandes support</div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-note">Les tickets ouverts remonteront ici.</div>
+                        </div>
+
+                        <div class="stat-box">
+                            <div class="stat-label">Textes à relire</div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-note">Les contenus sensibles pourront être priorisés.</div>
+                        </div>
+
+                        <div class="stat-box">
+                            <div class="stat-label">Auteurs actifs</div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-note">Le suivi de la plateforme arrivera ici.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Accès rapides</h2>
+                    <p>
+                        Les actions essentielles doivent rester visibles tout de suite.
+                    </p>
+
+                    <div class="top-actions">
+                        <button class="mini-btn primary" onclick="showPanelFromMenu('reports-panel')">
+                            Voir les signalements
+                        </button>
+                        <button class="mini-btn" onclick="showPanelFromMenu('stories-panel')">
+                            Gérer les œuvres
+                        </button>
+                        <button class="mini-btn" onclick="showPanelFromMenu('users-panel')">
+                            Voir les utilisateurs
+                        </button>
+                        <button class="mini-btn" onclick="showPanelFromMenu('support-panel')">
+                            Ouvrir le support
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="reports-panel">
+                <div class="panel-kicker">Signalements</div>
+                <h1>Signalements</h1>
+                <p class="panel-subtitle">
+                    Cette zone servira à prioriser ce qui mérite réellement un regard humain.
+                </p>
+
+                <div class="admin-card">
+                    <h2>À surveiller</h2>
+                    <div class="list-box">
+                        <div class="list-item">
+                            <div class="list-main">
+                                <div class="list-title">Aucun signalement pour le moment</div>
+                                <div class="list-meta">
+                                    <span class="status-pill pill-safe">Calme</span>
+                                </div>
+                                <div class="list-text">
+                                    Quand le système de signalement sera branché, les éléments à traiter
+                                    apparaîtront ici avec leur priorité.
+                                </div>
+                            </div>
+
+                            <div class="list-actions">
+                                <button class="mini-btn" type="button" onclick="adminPlaceholder('Liste des signalements')">
+                                    Rafraîchir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="stories-panel">
+                <div class="panel-kicker">Œuvres</div>
+                <h1>Œuvres publiées et brouillons</h1>
+                <p class="panel-subtitle">
+                    Tu pourras ici retrouver les textes publiés, les contenus en attente,
+                    et retirer rapidement une œuvre si besoin.
+                </p>
+
+                <div class="admin-card">
+                    <h2>Modération des textes</h2>
+
+                    <div class="list-box">
+                        <div class="list-item">
+                            <div class="list-main">
+                                <div class="list-title">Aucune œuvre à modérer pour l’instant</div>
+                                <div class="list-meta">
+                                    <span class="status-pill pill-safe">Rien à traiter</span>
+                                </div>
+                                <div class="list-text">
+                                    Plus tard, cette zone affichera le titre, l’auteur, le statut,
+                                    la date de publication et des actions rapides.
+                                </div>
+                            </div>
+
+                            <div class="list-actions">
+                                <button class="mini-btn" type="button" onclick="adminPlaceholder('Ouverture de l’œuvre')">
+                                    Ouvrir
+                                </button>
+                                <button class="mini-btn danger" type="button" onclick="adminPlaceholder('Masquage de l’œuvre')">
+                                    Masquer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feedback" id="stories-feedback"></div>
+                </div>
+            </section>
+
+            <section class="panel" id="users-panel">
+                <div class="panel-kicker">Utilisateurs</div>
+                <h1>Utilisateurs</h1>
+                <p class="panel-subtitle">
+                    Cet espace permettra de repérer rapidement les comptes à surveiller
+                    et les auteurs de confiance.
+                </p>
+
+                <div class="admin-card">
+                    <h2>Gestion des comptes</h2>
+
+                    <div class="list-box">
+                        <div class="list-item">
+                            <div class="list-main">
+                                <div class="list-title">Gestion utilisateur bientôt branchée</div>
+                                <div class="list-meta">
+                                    <span class="status-pill pill-alert">À construire</span>
+                                </div>
+                                <div class="list-text">
+                                    Tu pourras plus tard suspendre, avertir, ou suivre un utilisateur
+                                    depuis cette zone.
+                                </div>
+                            </div>
+
+                            <div class="list-actions">
+                                <button class="mini-btn" type="button" onclick="adminPlaceholder('Affichage des comptes')">
+                                    Voir
+                                </button>
+                                <button class="mini-btn danger" type="button" onclick="adminPlaceholder('Suspension du compte')">
+                                    Suspendre
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feedback" id="users-feedback"></div>
+                </div>
+            </section>
+
+            <section class="panel" id="support-panel">
+                <div class="panel-kicker">Support</div>
+                <h1>Support</h1>
+                <p class="panel-subtitle">
+                    Les demandes envoyées par les utilisateurs pourront être suivies ici,
+                    sans sortir de l’espace d’administration.
+                </p>
+
+                <div class="admin-card">
+                    <h2>Tickets support</h2>
+                    <div class="empty-box">
+                        Les futures demandes de support apparaîtront ici avec leur sujet,
+                        leur catégorie, leur statut, et l’utilisateur concerné.
+                    </div>
+
+                    <div class="top-actions">
+                        <button class="mini-btn" type="button" onclick="adminPlaceholder('Actualisation du support')">
+                            Rafraîchir
+                        </button>
+                    </div>
+
+                    <div class="feedback" id="support-feedback"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function goHome() { window.location.href = "index.html"; }
+        function goLogin() { window.location.href = "login.html"; }
+        function goSignup() { window.location.href = "signup.html"; }
+        function goDashboard() { window.location.href = "dashboard.html"; }
+        function goWriterProfile() { window.location.href = "writer-profile.html"; }
+        function goSettings() { window.location.href = "settings.html"; }
+
+        function switchMode(mode) {
+            sessionStorage.setItem("active_mode", mode);
+
+            if (mode === "reader") {
+                window.location.href = "index.html";
+                return;
+            }
+
+            if (mode === "writer") {
+                window.location.href = "writer-dashboard.html";
+                return;
+            }
+
+            if (mode === "admin") {
+                window.location.href = "admin-dashboard.html";
+                return;
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            sessionStorage.removeItem("active_mode");
+            window.location.href = "index.html";
+        }
+
+        function setupProfileDropdown() {
+            const trigger = document.getElementById("profile-menu-trigger");
+            const dropdown = document.getElementById("profile-dropdown");
+            if (!trigger || !dropdown) return;
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdown.classList.toggle("open");
+            });
+
+            dropdown.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("open");
+            });
+        }
+
+        function showPanel(panelId, button) {
+            document.querySelectorAll(".panel").forEach(panel => {
+                panel.classList.remove("active");
+            });
+
+            document.querySelectorAll(".sidebar-item[data-panel]").forEach(item => {
+                item.classList.remove("active");
+            });
+
+            document.getElementById(panelId).classList.add("active");
+
+            if (button && button.dataset.panel) {
+                button.classList.add("active");
+            }
+        }
+
+        function showPanelFromMenu(panelId) {
+            const button = document.querySelector(`.sidebar-item[data-panel="${panelId}"]`);
+            showPanel(panelId, button);
+        }
+
+        function adminPlaceholder(actionName) {
+            const visiblePanel = document.querySelector(".panel.active");
+            if (!visiblePanel) return;
+
+            const feedback = visiblePanel.querySelector(".feedback");
+            if (feedback) {
+                feedback.textContent = `${actionName} bientôt disponible.`;
+            }
+        }
+
+        async function loadHeader() {
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = data.user;
+            const metadata = user.user_metadata || {};
+
+            const pseudo = metadata.pseudo || "Mon compte";
+            const avatarUrl = metadata.avatar_url || "images/default-avatar.png";
+
+            const roles = Array.isArray(metadata.roles)
+                ? metadata.roles
+                : (metadata.role ? [metadata.role] : ["reader"]);
+
+            const canRead = roles.includes("reader");
+            const canWrite = roles.includes("writer");
+            const canAdmin = roles.includes("admin");
+
+            let switchButtons = "";
+
+            if (canRead) {
+                switchButtons += `
+                    <button class="header-btn" onclick="switchMode('reader')">
+                        Jardin des mots
+                    </button>
+                `;
+            }
+
+            if (canWrite) {
+                switchButtons += `
+                    <button class="header-btn" onclick="switchMode('writer')">
+                        Écriture
+                    </button>
+                `;
+            }
+
+            header.innerHTML = `
+                ${switchButtons}
+
+                <div class="profile-menu-wrapper">
+                    <button
+                        class="header-btn profile-btn profile-trigger"
+                        id="profile-menu-trigger"
+                        type="button"
+                    >
+                        <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+                        <span>${pseudo}</span>
+                    </button>
+
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <button class="dropdown-item" onclick="goDashboard()">Mon espace</button>
+                        ${canWrite ? `<button class="dropdown-item" onclick="goWriterProfile()">Profil écrivain</button>` : ``}
+                        <button class="dropdown-item" onclick="goSettings()">Paramètres</button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" onclick="logout()">Déconnexion</button>
+                    </div>
+                </div>
+            `;
+
+            setupProfileDropdown();
+        }
+
+        async function protectAdminDashboard() {
+            const { data, error } = await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = data.user;
+            const metadata = user.user_metadata || {};
+
+            const roles = Array.isArray(metadata.roles)
+                ? metadata.roles
+                : (metadata.role ? [metadata.role] : ["reader"]);
+
+            const activeMode = sessionStorage.getItem("active_mode");
+            const pseudo = metadata.pseudo || "Gardien";
+
+            if (!roles.includes("admin")) {
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            if (activeMode !== "admin") {
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            document.getElementById("admin-title").textContent = `Bienvenue ${pseudo} 👁️`;
+            document.getElementById("admin-subtitle").textContent =
+                "Voici ton espace d’administration. Tu peux surveiller le jardin, traiter les points sensibles, et intervenir rapidement sans t’encombrer.";
+        }
+
+        loadHeader();
+        protectAdminDashboard();
+    </script>
+
+</body>
+</html>

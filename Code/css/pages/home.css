@@ -1,0 +1,128 @@
+.home-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    padding-top: 110px;
+}
+
+.home-card {
+    width: 100%;
+    max-width: 760px;
+    text-align: center;
+    background: rgba(20, 20, 25, 0.62);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-xl);
+    padding: 52px 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-main);
+    transition: transform 0.3s ease;
+}
+
+.home-card:hover {
+    transform: translateY(-2px);
+}
+
+.home-card h1 {
+    font-size: 3.2rem;
+    line-height: 1.1;
+    margin: 0 0 20px;
+    color: var(--text-title);
+}
+
+.home-subtitle {
+    font-size: 1.22rem;
+    line-height: 1.6;
+    color: var(--text-soft);
+    margin: 0 auto 20px;
+    max-width: 620px;
+}
+
+.highlight {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.home-message {
+    margin: 0 auto 35px;
+    max-width: 600px;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #d7cebf;
+    opacity: 0.88;
+    font-style: italic;
+}
+
+.home-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.main-btn {
+    padding: 14px 26px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn {
+    background: var(--accent);
+    color: var(--accent-dark);
+    border: none;
+    font-weight: bold;
+    box-shadow: var(--shadow-accent);
+}
+
+.secondary-btn {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-soft-3);
+}
+
+.main-btn:hover,
+.primary-btn:hover,
+.secondary-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    opacity: 0.96;
+}
+
+.primary-btn:hover {
+    box-shadow: 0 15px 35px rgba(240, 198, 116, 0.4);
+}
+
+@media (max-width: 700px) {
+    .home-shell {
+        padding-top: 100px;
+    }
+
+    .home-card {
+        padding: 38px 24px;
+    }
+
+    .home-card h1 {
+        font-size: 2.3rem;
+    }
+
+    .home-subtitle {
+        font-size: 1rem;
+    }
+
+    .home-message {
+        font-size: 0.95rem;
+    }
+
+    .home-buttons {
+        flex-direction: column;
+    }
+
+    .main-btn {
+        width: 100%;
+    }
+
+    .main-header {
+        padding: 0 15px;
+    }
+}

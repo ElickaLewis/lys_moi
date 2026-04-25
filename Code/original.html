@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Œuvres originales - Lys Moi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                linear-gradient(rgba(10,10,15,0.70), rgba(10,10,15,0.90)),
+                url("images/background.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #f5f1e8;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-menu-wrapper {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2000;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: auto;
+            padding: 100px 24px 40px;
+        }
+
+        .topline {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            color: #f0c674;
+            font-size: 2.6rem;
+            line-height: 1.1;
+        }
+
+        .description {
+            color: #ddd3c4;
+            line-height: 1.8;
+            max-width: 820px;
+            margin-bottom: 26px;
+        }
+
+        .search-shell {
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 24px;
+            padding: 18px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+            margin-bottom: 22px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.08);
+            color: #f5f1e8;
+        }
+
+        .search-input::placeholder {
+            color: rgba(245, 241, 232, 0.58);
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 2px rgba(240, 198, 116, 0.30);
+        }
+
+        .filter-toggle {
+            min-width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.05);
+            color: #f0c674;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .filter-toggle:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(240, 198, 116, 0.24);
+        }
+
+        .filters-panel {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .filters-panel.open {
+            display: block;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px;
+        }
+
+        .filter-block-title {
+            color: #f0c674;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .tags-box,
+        .status-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            color: #ddd3c4;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .filter-chip:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,0.07);
+        }
+
+        .filter-chip input {
+            margin: 0;
+            accent-color: #f0c674;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .sidebar,
+        .results-shell {
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 28px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+        }
+
+        .sidebar {
+            padding: 22px 16px;
+            position: sticky;
+            top: 92px;
+        }
+
+        .sidebar-title {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            padding: 0 10px;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .category-btn {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #f5f1e8;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .category-btn:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateX(2px);
+        }
+
+        .category-btn.active {
+            background: rgba(240, 198, 116, 0.10);
+            border-color: rgba(240, 198, 116, 0.18);
+            color: #f0c674;
+        }
+
+        .category-btn.mature {
+            display: none;
+            color: #ffb4b4;
+        }
+
+        .category-btn.mature.active {
+            background: rgba(120, 30, 30, 0.18);
+            border-color: rgba(255, 130, 130, 0.20);
+            color: #ffc5c5;
+        }
+
+        .clear-category {
+            margin-top: 14px;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.04);
+            color: #ddd3c4;
+            font-family: inherit;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .clear-category:hover {
+            background: rgba(255,255,255,0.07);
+            transform: translateY(-1px);
+        }
+
+        .results-shell {
+            padding: 28px;
+            min-height: 620px;
+        }
+
+        .results-title {
+            margin: 0 0 8px;
+            color: #fff8ee;
+            font-size: 1.5rem;
+        }
+
+        .results-subtitle {
+            color: #cfc5b7;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .results-count {
+            color: #c9b08a;
+            font-size: 0.92rem;
+            margin-bottom: 18px;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .story-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(240, 198, 116, 0.20);
+            background: rgba(255,255,255,0.055);
+        }
+
+        .story-cover {
+            height: 180px;
+            background: rgba(255,255,255,0.07);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c9b08a;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .story-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .story-content {
+            padding: 16px;
+        }
+
+        .story-name {
+            font-size: 1.02rem;
+            color: #fff8ee;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .story-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .story-author {
+            color: #c9b08a;
+            font-size: 0.9rem;
+        }
+
+        .story-category {
+            color: #b9ad99;
+            font-size: 0.82rem;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .story-status-badge {
+            font-size: 0.86rem;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-weight: bold;
+            letter-spacing: 0.2px;
+        }
+
+        .status-ongoing {
+            color: #ffe2a6;
+            background: rgba(240, 198, 116, 0.14);
+            border: 1px solid rgba(240, 198, 116, 0.24);
+        }
+
+        .status-finished {
+            color: #d6f3dc;
+            background: rgba(120, 220, 160, 0.12);
+            border: 1px solid rgba(120, 220, 160, 0.22);
+        }
+
+        .story-summary {
+            color: #ddd3c4;
+            line-height: 1.65;
+            font-size: 0.92rem;
+            margin-bottom: 12px;
+        }
+
+        .story-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .story-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.05);
+            color: #c9b08a;
+            font-size: 0.78rem;
+        }
+
+        .empty-results {
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed rgba(255,255,255,0.12);
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 1020px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .story-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 82px 16px 28px;
+            }
+
+            h1 {
+                font-size: 2.1rem;
+            }
+
+            .search-row {
+                align-items: stretch;
+            }
+
+            .filter-toggle {
+                min-width: 54px;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="container">
+        <div class="topline">Lys Moi</div>
+        <h1>🖋️ Œuvres originales</h1>
+        <div class="description">
+            Explore des univers entièrement imaginés par leurs auteurs. Cherche un titre, coche des filtres, puis choisis un thème si tu veux affiner encore davantage.
+        </div>
+
+        <section class="search-shell">
+            <div class="search-row">
+                <input
+                    type="text"
+                    class="search-input"
+                    id="search-input"
+                    placeholder="Rechercher une œuvre, un auteur ou un mot-clé..."
+                >
+                <button class="filter-toggle" id="filter-toggle" type="button" aria-label="Ouvrir les filtres">+</button>
+            </div>
+
+            <div class="filters-panel" id="filters-panel">
+                <div class="filters-grid">
+                    <div>
+                        <div class="filter-block-title">Tags</div>
+                        <div class="tags-box">
+                            <label class="filter-chip"><input type="checkbox" value="slow burn" class="tag-checkbox">Slow burn</label>
+                            <label class="filter-chip"><input type="checkbox" value="fast burn" class="tag-checkbox">Fast burn</label>
+                            <label class="filter-chip"><input type="checkbox" value="magie" class="tag-checkbox">Magie</label>
+                            <label class="filter-chip"><input type="checkbox" value="dragons" class="tag-checkbox">Dragons</label>
+                            <label class="filter-chip"><input type="checkbox" value="guerre" class="tag-checkbox">Guerre</label>
+                            <label class="filter-chip"><input type="checkbox" value="quête" class="tag-checkbox">Quête</label>
+                            <label class="filter-chip"><input type="checkbox" value="royauté" class="tag-checkbox">Royauté</label>
+                            <label class="filter-chip"><input type="checkbox" value="politique" class="tag-checkbox">Politique</label>
+                            <label class="filter-chip"><input type="checkbox" value="enquête" class="tag-checkbox">Enquête</label>
+                            <label class="filter-chip"><input type="checkbox" value="mystère" class="tag-checkbox">Mystère</label>
+                            <label class="filter-chip"><input type="checkbox" value="thriller" class="tag-checkbox">Thriller</label>
+                            <label class="filter-chip"><input type="checkbox" value="sombre" class="tag-checkbox">Sombre</label>
+                            <label class="filter-chip"><input type="checkbox" value="poétique" class="tag-checkbox">Poétique</label>
+                            <label class="filter-chip"><input type="checkbox" value="passion" class="tag-checkbox">Passion</label>
+                            <label class="filter-chip"><input type="checkbox" value="amitié" class="tag-checkbox">Amitié</label>
+                            <label class="filter-chip"><input type="checkbox" value="famille" class="tag-checkbox">Famille</label>
+                            <label class="filter-chip"><input type="checkbox" value="tragédie" class="tag-checkbox">Tragédie</label>
+                            <label class="filter-chip"><input type="checkbox" value="vengeance" class="tag-checkbox">Vengeance</label>
+                            <label class="filter-chip"><input type="checkbox" value="survie" class="tag-checkbox">Survie</label>
+                            <label class="filter-chip"><input type="checkbox" value="aventure" class="tag-checkbox">Aventure</label>
+                            <label class="filter-chip"><input type="checkbox" value="voyage" class="tag-checkbox">Voyage</label>
+                            <label class="filter-chip"><input type="checkbox" value="espace" class="tag-checkbox">Espace</label>
+                            <label class="filter-chip"><input type="checkbox" value="ia" class="tag-checkbox">IA</label>
+                            <label class="filter-chip"><input type="checkbox" value="dystopie" class="tag-checkbox">Dystopie</label>
+                            <label class="filter-chip"><input type="checkbox" value="post-apocalyptique" class="tag-checkbox">Post-apo</label>
+                            <label class="filter-chip"><input type="checkbox" value="créatures" class="tag-checkbox">Créatures</label>
+                            <label class="filter-chip"><input type="checkbox" value="malédiction" class="tag-checkbox">Malédiction</label>
+                            <label class="filter-chip"><input type="checkbox" value="sorcières" class="tag-checkbox">Sorcières</label>
+                            <label class="filter-chip"><input type="checkbox" value="forêt" class="tag-checkbox">Forêt</label>
+                            <label class="filter-chip"><input type="checkbox" value="mer" class="tag-checkbox">Mer</label>
+                            <label class="filter-chip"><input type="checkbox" value="campus" class="tag-checkbox">Campus</label>
+                            <label class="filter-chip"><input type="checkbox" value="historique" class="tag-checkbox">Historique</label>
+                            <label class="filter-chip"><input type="checkbox" value="psychologique" class="tag-checkbox">Psychologique</label>
+                            <label class="filter-chip"><input type="checkbox" value="huis clos" class="tag-checkbox">Huis clos</label>
+                            <label class="filter-chip"><input type="checkbox" value="légendes" class="tag-checkbox">Légendes</label>
+                            <label class="filter-chip"><input type="checkbox" value="destin" class="tag-checkbox">Destin</label>
+                            <label class="filter-chip"><input type="checkbox" value="slow life" class="tag-checkbox">Slow life</label>
+                            <label class="filter-chip"><input type="checkbox" value="feel good" class="tag-checkbox">Feel good</label>
+                            <label class="filter-chip"><input type="checkbox" value="triangle amoureux" class="tag-checkbox">Triangle amoureux</label>
+                            <label class="filter-chip"><input type="checkbox" value="enemies to lovers" class="tag-checkbox">Enemies to lovers</label>
+                            <label class="filter-chip"><input type="checkbox" value="friends to lovers" class="tag-checkbox">Friends to lovers</label>
+                            <label class="filter-chip"><input type="checkbox" value="seconde chance" class="tag-checkbox">Seconde chance</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="filter-block-title">Statut</div>
+                        <div class="status-box">
+                            <label class="filter-chip"><input type="checkbox" value="en cours" class="status-checkbox">En cours</label>
+                            <label class="filter-chip"><input type="checkbox" value="terminée" class="status-checkbox">Terminée</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-title">Catégories</div>
+
+                <div class="category-list" id="category-list">
+                    <button class="category-btn" data-category="fantasy">⚔️ Fantasy</button>
+                    <button class="category-btn" data-category="science-fiction">🚀 Science-fiction</button>
+                    <button class="category-btn" data-category="romance">❤️ Romance</button>
+                    <button class="category-btn" data-category="policier">🕵️ Policier</button>
+                    <button class="category-btn" data-category="horreur">👻 Horreur</button>
+                    <button class="category-btn" data-category="drame">🎭 Drame</button>
+                    <button class="category-btn mature" data-category="contenu mature" id="mature-category-btn">🔒 Contenu mature</button>
+                </div>
+
+                <button class="clear-category" type="button" id="clear-category-btn">
+                    Retirer la catégorie sélectionnée
+                </button>
+            </aside>
+
+            <section class="results-shell">
+                <h2 class="results-title" id="results-title">Choisis une direction</h2>
+                <div class="results-subtitle" id="results-subtitle">
+                    Sélectionne une catégorie, ou lance une recherche, pour faire apparaître les œuvres correspondantes.
+                </div>
+                <div class="results-count" id="results-count">0 résultat</div>
+
+                <div id="results-container"></div>
+            </section>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let stories = [];
+        let selectedCategory = null;
+        let userIsAdult = false;
+
+        const searchInput = document.getElementById("search-input");
+        const filterToggle = document.getElementById("filter-toggle");
+        const filtersPanel = document.getElementById("filters-panel");
+        const resultsTitle = document.getElementById("results-title");
+        const resultsSubtitle = document.getElementById("results-subtitle");
+        const resultsCount = document.getElementById("results-count");
+        const resultsContainer = document.getElementById("results-container");
+        const clearCategoryButton = document.getElementById("clear-category-btn");
+        const tagCheckboxes = Array.from(document.querySelectorAll(".tag-checkbox"));
+        const statusCheckboxes = Array.from(document.querySelectorAll(".status-checkbox"));
+
+        function goHome() { window.location.href = "index.html"; }
+        function goLogin() { window.location.href = "login.html"; }
+        function goSignup() { window.location.href = "signup.html"; }
+        function goDashboard() { window.location.href = "dashboard.html"; }
+        function goWriterProfile() { window.location.href = "writer-profile.html"; }
+        function goSettings() { window.location.href = "settings.html"; }
+
+        function switchMode(mode) {
+            sessionStorage.setItem("active_mode", mode);
+
+            if (mode === "reader") {
+                window.location.href = "reader-dashboard.html";
+                return;
+            }
+
+            if (mode === "writer") {
+                window.location.href = "writer-dashboard.html";
+                return;
+            }
+
+            if (mode === "admin") {
+                window.location.href = "admin-dashboard.html";
+                return;
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            sessionStorage.removeItem("active_mode");
+            window.location.href = "index.html";
+        }
+
+        function setupProfileDropdown() {
+            const trigger = document.getElementById("profile-menu-trigger");
+            const dropdown = document.getElementById("profile-dropdown");
+            if (!trigger || !dropdown) return;
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdown.classList.toggle("open");
+            });
+
+            dropdown.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("open");
+            });
+        }
+
+        async function loadHeader() {
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
+
+            if (error || !data.user) {
+                header.innerHTML = `
+                    <button class="header-btn" onclick="goLogin()">Connexion</button>
+                    <button class="header-btn" onclick="goSignup()">Inscription</button>
+                `;
+                return;
+            }
+
+            const user = data.user;
+            const metadata = user.user_metadata || {};
+
+            const pseudo = metadata.pseudo || "Mon compte";
+            const avatarUrl = metadata.avatar_url || "images/default-avatar.png";
+
+            const roles = Array.isArray(metadata.roles)
+                ? metadata.roles
+                : (metadata.role ? [metadata.role] : ["reader"]);
+
+            const canRead = roles.includes("reader");
+            const canWrite = roles.includes("writer");
+            const canAdmin = roles.includes("admin");
+
+            header.innerHTML = `
+                ${canRead ? `<button class="header-btn" onclick="switchMode('reader')">Lecture</button>` : ``}
+                ${canWrite ? `<button class="header-btn" onclick="switchMode('writer')">Écriture</button>` : ``}
+                ${canAdmin ? `<button class="header-btn" onclick="switchMode('admin')">Admin</button>` : ``}
+
+                <div class="profile-menu-wrapper">
+                    <button
+                        class="header-btn profile-btn profile-trigger"
+                        id="profile-menu-trigger"
+                        type="button"
+                    >
+                        <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+                        <span>${pseudo}</span>
+                    </button>
+
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <button class="dropdown-item" onclick="goDashboard()">Mon espace</button>
+                        ${canWrite ? `<button class="dropdown-item" onclick="goWriterProfile()">Profil écrivain</button>` : ``}
+                        <button class="dropdown-item" onclick="goSettings()">Paramètres</button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" onclick="logout()">Déconnexion</button>
+                    </div>
+                </div>
+            `;
+
+            setupProfileDropdown();
+        }
+
+        function getAgeFromBirthdate(birthdateString) {
+            if (!birthdateString) return 0;
+
+            const today = new Date();
+            const birthdate = new Date(birthdateString);
+
+            if (Number.isNaN(birthdate.getTime())) return 0;
+
+            let age = today.getFullYear() - birthdate.getFullYear();
+            const monthDiff = today.getMonth() - birthdate.getMonth();
+
+            if (
+                monthDiff < 0 ||
+                (monthDiff === 0 && today.getDate() < birthdate.getDate())
+            ) {
+                age--;
+            }
+
+            return age;
+        }
+
+        function isAdult(birthdateString) {
+            return getAgeFromBirthdate(birthdateString) >= 18;
+        }
+
+        async function detectAdultStatus() {
+            const { data, error } = await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+                userIsAdult = false;
+                return;
+            }
+
+            const birthdate = data.user.user_metadata?.birthdate || "";
+            userIsAdult = isAdult(birthdate);
+
+            console.log("birthdate =", birthdate);
+            console.log("userIsAdult =", userIsAdult);
+        }
+
+        function applyMatureCategoryVisibility() {
+            const matureButton = document.getElementById("mature-category-btn");
+            if (!matureButton) return;
+
+            if (userIsAdult) {
+                matureButton.style.display = "block";
+            } else {
+                matureButton.style.display = "none";
+
+                if (selectedCategory === "contenu mature") {
+                    selectedCategory = null;
+                }
+            }
+        }
+
+        function getCategoryButtons() {
+            return Array.from(document.querySelectorAll(".category-btn"));
+        }
+
+        function bindCategoryEvents() {
+            getCategoryButtons().forEach(button => {
+                button.addEventListener("click", function () {
+                    const category = this.dataset.category;
+
+                    if (selectedCategory === category) {
+                        selectedCategory = null;
+                        this.classList.remove("active");
+                    } else {
+                        selectedCategory = category;
+                        getCategoryButtons().forEach(btn => btn.classList.remove("active"));
+                        this.classList.add("active");
+                    }
+
+                    renderResults();
+                });
+            });
+        }
+
+        function formatCategory(category) {
+            const map = {
+                "fantasy": "Fantasy",
+                "science-fiction": "Science-fiction",
+                "romance": "Romance",
+                "policier": "Policier",
+                "horreur": "Horreur",
+                "drame": "Drame",
+                "contenu mature": "Contenu mature"
+            };
+
+            return map[category] || category || "Sans catégorie";
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function getSelectedTags() {
+            return tagCheckboxes.filter(input => input.checked).map(input => input.value.toLowerCase());
+        }
+
+        function getSelectedStatuses() {
+            return statusCheckboxes.filter(input => input.checked).map(input => input.value.toLowerCase());
+        }
+
+        function hasAnyActiveFilter() {
+            const hasSearch = searchInput.value.trim() !== "";
+            const hasCategory = !!selectedCategory;
+            const hasTags = tagCheckboxes.some(input => input.checked);
+            const hasStatuses = statusCheckboxes.some(input => input.checked);
+
+            return hasSearch || hasCategory || hasTags || hasStatuses;
+        }
+
+        function getStatusBadge(status) {
+            if ((status || "").toLowerCase() === "en cours") {
+                return `<span class="story-status-badge status-ongoing">En cours</span>`;
+            }
+
+            return `<span class="story-status-badge status-finished">Terminée</span>`;
+        }
+
+        function openStory(storyId) {
+            window.location.href = `story.html?id=${storyId}`;
+        }
+
+        function filterStories() {
+            const searchValue = searchInput.value.trim().toLowerCase();
+            const selectedTags = getSelectedTags();
+            const selectedStatuses = getSelectedStatuses();
+
+            return stories.filter(story => {
+                const storyCategory = (story.category || "").toLowerCase();
+                const storyStatus = (story.story_status || "").toLowerCase();
+                const storyTags = Array.isArray(story.tags) ? story.tags.map(tag => tag.toLowerCase()) : [];
+
+                if (!userIsAdult && storyCategory === "contenu mature") {
+                    return false;
+                }
+
+                const matchesCategory = !selectedCategory || storyCategory === selectedCategory;
+                const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(storyStatus);
+                const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => storyTags.includes(tag));
+
+                const searchableText = [
+                    story.title,
+                    story.summary,
+                    story.author,
+                    story.category,
+                    ...(story.tags || [])
+                ].join(" ").toLowerCase();
+
+                const matchesSearch = !searchValue || searchableText.includes(searchValue);
+
+                return matchesCategory && matchesStatus && matchesTags && matchesSearch;
+            });
+        }
+
+        function renderResults() {
+            const activeFilters = hasAnyActiveFilter();
+
+            if (!activeFilters) {
+                resultsTitle.textContent = "Choisis une direction";
+                resultsSubtitle.textContent = "Sélectionne une catégorie, ou lance une recherche, pour faire apparaître les œuvres correspondantes.";
+                resultsCount.textContent = "0 résultat";
+                resultsContainer.innerHTML = `
+                    <div class="empty-results">
+                        Rien ne s’affiche pour l’instant, et c’est normal. Clique sur une catégorie à gauche, ou utilise la recherche et les filtres pour commencer l’exploration.
+                    </div>
+                `;
+                return;
+            }
+
+            const filteredStories = filterStories();
+
+            if (selectedCategory) {
+                resultsTitle.textContent = `Œuvres : ${formatCategory(selectedCategory)}`;
+                resultsSubtitle.textContent = "Voici les œuvres qui correspondent à ta recherche, à tes filtres, et à la catégorie actuellement sélectionnée.";
+            } else {
+                resultsTitle.textContent = "Résultats de l’exploration";
+                resultsSubtitle.textContent = "Voici les œuvres qui correspondent à ta recherche et à tes filtres, toutes catégories confondues.";
+            }
+
+            resultsCount.textContent = filteredStories.length + (filteredStories.length > 1 ? " résultats" : " résultat");
+
+            if (filteredStories.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-results">
+                        Aucune œuvre ne correspond à la recherche actuelle. Essaie un autre mot-clé, retire un filtre, ou change de catégorie.
+                    </div>
+                `;
+                return;
+            }
+
+            const cards = filteredStories.map(story => {
+                const tagsHtml = (story.tags || []).map(tag => `<span class="story-tag">${escapeHtml(tag)}</span>`).join("");
+                const coverHtml = story.cover_url
+                    ? `<img src="${story.cover_url}" alt="Couverture de ${escapeHtml(story.title)}">`
+                    : `Pas de couverture`;
+
+                return `
+                    <article class="story-card" onclick="openStory('${story.id}')">
+                        <div class="story-cover">${coverHtml}</div>
+                        <div class="story-content">
+                            <div class="story-name">${escapeHtml(story.title)}</div>
+
+                            <div class="story-meta">
+                                <span class="story-author">par ${escapeHtml(story.author)}</span>
+                                <span class="story-category">${escapeHtml(formatCategory(story.category))}</span>
+                                ${getStatusBadge(story.story_status)}
+                            </div>
+
+                            <div class="story-summary">${escapeHtml(story.summary)}</div>
+                            <div class="story-tags">${tagsHtml}</div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+
+            resultsContainer.innerHTML = `<div class="story-grid">${cards}</div>`;
+        }
+
+        async function loadStoriesFromSupabase() {
+            let query = supabaseClient
+                .from("stories")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (!userIsAdult) {
+                query = query.neq("category", "contenu mature");
+            }
+
+            const { data, error } = await query;
+
+            if (error) {
+                console.error(error);
+                resultsContainer.innerHTML = `
+                    <div class="empty-results">
+                        Impossible de charger les œuvres pour le moment.
+                    </div>
+                `;
+                return;
+            }
+
+            stories = data || [];
+            renderResults();
+        }
+
+        async function initPage() {
+            await loadHeader();
+            await detectAdultStatus();
+            applyMatureCategoryVisibility();
+            bindCategoryEvents();
+            await loadStoriesFromSupabase();
+        }
+
+        filterToggle.addEventListener("click", function () {
+            filtersPanel.classList.toggle("open");
+            filterToggle.textContent = filtersPanel.classList.contains("open") ? "−" : "+";
+        });
+
+        searchInput.addEventListener("input", renderResults);
+
+        tagCheckboxes.forEach(input => {
+            input.addEventListener("change", renderResults);
+        });
+
+        statusCheckboxes.forEach(input => {
+            input.addEventListener("change", renderResults);
+        });
+
+        clearCategoryButton.addEventListener("click", function () {
+            selectedCategory = null;
+            getCategoryButtons().forEach(btn => btn.classList.remove("active"));
+            renderResults();
+        });
+
+        initPage();
+        supabaseClient.auth.getUser().then(({ data, error }) => {
+  console.log("error =", error);
+  console.log("user =", data?.user);
+  console.log("metadata =", data?.user?.user_metadata);
+  console.log("birthdate =", data?.user?.user_metadata?.birthdate);
+});
+    </script>
+</body>
+</html>

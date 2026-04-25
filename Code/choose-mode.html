@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choisir un mode - Lys Moi</title>
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/choose-mode.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="choose-shell">
+        <section class="choose-hero">
+            <div class="topline">Lys Moi</div>
+            <h1 id="choose-title">Bienvenue</h1>
+            <p class="choose-subtitle" id="choose-subtitle">
+                Souhaites-tu retrouver ta plume, te laisser porter par les mots…
+                ou veiller sur le jardin ?
+            </p>
+        </section>
+
+        <section class="choose-grid" id="choose-grid">
+            <article class="mode-card reader-card" id="reader-card" style="display:none;">
+                <div class="mode-kicker">Lecture</div>
+                <h2>Me laisser porter par les mots</h2>
+                <p>
+                    Rejoindre l’espace lecture, explorer les œuvres, reprendre une histoire
+                    laissée en suspens, et te laisser toucher par la voix des autres.
+                </p>
+                <button class="mode-btn mode-btn-secondary" onclick="switchMode('reader')">
+                    Ouvrir le salon de lecture
+                </button>
+            </article>
+
+            <article class="mode-card writer-card" id="writer-card" style="display:none;">
+                <div class="mode-kicker">Écriture</div>
+                <h2>Retrouver ma plume</h2>
+                <p>
+                    Revenir à ton atelier, reprendre ton élan, publier un chapitre,
+                    façonner une œuvre, ou simplement retrouver le fil de tes mots.
+                </p>
+                <button class="mode-btn mode-btn-primary" onclick="switchMode('writer')">
+                    Entrer dans l’atelier
+                </button>
+            </article>
+        </section>
+
+        <section class="admin-recap" id="admin-recap" style="display:none;">
+            <div class="admin-recap-top">
+                <div>
+                    <div class="topline">Veille</div>
+                    <h2>Un regard sur le jardin</h2>
+                    <p>
+                        Tu peux lire, écrire… et, si besoin, revenir veiller sur Lys Moi.
+                        Voici l’état du jardin pour t’aider à sentir où se trouve l’urgence du moment.
+                    </p>
+                </div>
+
+                <button class="mode-btn mode-btn-admin" id="admin-mode-button" onclick="switchMode('admin')">
+                    Veiller sur le jardin
+                </button>
+            </div>
+
+            <div class="admin-stats-grid">
+                <article class="admin-stat-card">
+                    <div class="admin-stat-label">Signalements en cours</div>
+                    <div class="admin-stat-value" id="admin-reports-count">—</div>
+                    <div class="admin-stat-note">Les contenus qui demandent un regard attentif.</div>
+                </article>
+
+                <article class="admin-stat-card">
+                    <div class="admin-stat-label">Demandes support</div>
+                    <div class="admin-stat-value" id="admin-support-count">—</div>
+                    <div class="admin-stat-note">Les messages laissés par celles et ceux qui ont besoin d’aide.</div>
+                </article>
+
+                <article class="admin-stat-card">
+                    <div class="admin-stat-label">Textes en attente</div>
+                    <div class="admin-stat-value" id="admin-pending-count">—</div>
+                    <div class="admin-stat-note">Les œuvres ou chapitres qui attendent encore une validation.</div>
+                </article>
+
+                <article class="admin-stat-card">
+                    <div class="admin-stat-label">Présences dans le jardin</div>
+                    <div class="admin-stat-value" id="admin-connected-count">—</div>
+                    <div class="admin-stat-note">Le nombre d’utilisateurs actuellement connectés.</div>
+                </article>
+
+                <article class="admin-stat-card admin-stat-card-accent">
+                    <div class="admin-stat-label">Nouvelles pousses</div>
+                    <div class="admin-stat-value" id="admin-new-users-count">—</div>
+                    <div class="admin-stat-note">Les nouveaux comptes récemment arrivés sur Lys Moi.</div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/pages/choose-mode.js"></script>
+</body>
+</html>

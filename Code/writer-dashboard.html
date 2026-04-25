@@ -1,0 +1,2680 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace écrivain - Lys Moi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
+                url("images/background.png");
+            background-size: cover;
+            background-position: right center;
+            background-repeat: no-repeat;
+            color: #f5f1e8;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 30px;
+            padding-top: 110px;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-menu-wrapper {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2000;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
+        }
+
+        .dashboard-shell {
+            width: 100%;
+            max-width: 1180px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .dashboard-sidebar,
+        .dashboard-content {
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 28px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .dashboard-sidebar {
+            padding: 24px 18px;
+            position: sticky;
+            top: 95px;
+        }
+
+        .dashboard-content {
+            padding: 36px 34px;
+            min-height: 620px;
+        }
+
+        .sidebar-title {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            padding: 0 10px;
+        }
+
+        .sidebar-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 14px 16px;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .sidebar-item.active {
+            background: rgba(240, 198, 116, 0.12);
+            border: 1px solid rgba(240, 198, 116, 0.20);
+            color: #f0c674;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-kicker {
+            font-size: 0.82rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .panel h1 {
+            margin: 0 0 14px;
+            font-size: 2.4rem;
+            color: #fff8ee;
+        }
+
+        .panel-subtitle {
+            color: #ddd3c4;
+            line-height: 1.7;
+            max-width: 760px;
+            margin-bottom: 30px;
+            font-size: 1.02rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px;
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .dashboard-card h2 {
+            margin: 0 0 10px;
+            font-size: 1.25rem;
+            color: #fff8ee;
+        }
+
+        .dashboard-card p {
+            margin: 0;
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        .writer-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .summary-box {
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .summary-label {
+            color: #c9b08a;
+            font-size: 0.92rem;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff8ee;
+            margin-bottom: 6px;
+        }
+
+        .summary-note {
+            color: #ddd3c4;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .primary-button,
+        .secondary-button,
+        .danger-button,
+        .tiny-button {
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .primary-button,
+        .secondary-button,
+        .danger-button {
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 1rem;
+        }
+
+        .primary-button {
+            border: none;
+            background: #f0c674;
+            color: #1a1620;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(240, 198, 116, 0.25);
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+            box-shadow: 0 15px 35px rgba(240, 198, 116, 0.35);
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.22);
+        }
+
+        .secondary-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .danger-button {
+            border: 1px solid rgba(255,120,120,0.28);
+            background: rgba(120,20,20,0.16);
+            color: #ffd3d3;
+        }
+
+        .danger-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+            background: rgba(140,30,30,0.20);
+        }
+
+        .tiny-button {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.05);
+            color: #f5f1e8;
+            font-size: 0.92rem;
+        }
+
+        .tiny-button:hover {
+            transform: translateY(-1px);
+            opacity: 0.97;
+            background: rgba(255,255,255,0.07);
+        }
+
+        .story-placeholder {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed rgba(255,255,255,0.12);
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        .small-note {
+            margin-top: 12px;
+            color: #c9b08a;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .compact-story-grid {
+            display: grid;
+            grid-template-columns: minmax(220px, 260px) 1fr;
+            gap: 18px;
+            align-items: start;
+            margin-top: 18px;
+        }
+
+        .story-info-box {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 18px;
+        }
+
+        .story-info-box h3 {
+            margin: 0 0 14px;
+            color: #fff8ee;
+            font-size: 1.05rem;
+        }
+
+        .story-meta-fields {
+            display: grid;
+            gap: 12px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd3c4;
+        }
+
+        .text-input,
+        .text-area,
+        select.text-input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            outline: none;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.08);
+            color: #f5f1e8;
+        }
+
+        .text-area {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .text-input:focus,
+        .text-area:focus,
+        select.text-input:focus {
+            box-shadow: 0 0 0 2px rgba(240, 198, 116, 0.28);
+        }
+
+        .text-input::placeholder,
+        .text-area::placeholder {
+            color: rgba(245, 241, 232, 0.58);
+        }
+
+        select.text-input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            background-image:
+                linear-gradient(45deg, transparent 50%, #f0c674 50%),
+                linear-gradient(135deg, #f0c674 50%, transparent 50%);
+            background-position:
+                calc(100% - 22px) calc(50% - 3px),
+                calc(100% - 16px) calc(50% - 3px);
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 42px;
+        }
+
+        select.text-input option {
+            background: #1b1820;
+            color: #f5f1e8;
+        }
+
+        .cover-box {
+            display: grid;
+            gap: 12px;
+        }
+
+        .cover-preview-shell {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px dashed rgba(255,255,255,0.16);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .cover-preview-shell.has-image {
+            border-style: solid;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .cover-preview-placeholder {
+            color: #c9b08a;
+            text-align: center;
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+
+        .cover-preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+            display: none;
+        }
+
+        .cover-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cover-help {
+            color: #c9b08a;
+            line-height: 1.7;
+            font-size: 0.9rem;
+        }
+
+        .select-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+
+        .tag-list label {
+            color: #ddd3c4;
+            cursor: pointer;
+        }
+
+        .tag-list input {
+            accent-color: #f0c674;
+        }
+
+        .upload-card-compact {
+            padding: 18px 20px;
+        }
+
+        .upload-card-compact h2 {
+            margin-bottom: 8px;
+            font-size: 1.08rem;
+        }
+
+        .upload-card-compact p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .upload-row-compact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .upload-row-compact .primary-button {
+            padding: 10px 14px;
+            font-size: 0.92rem;
+            border-radius: 12px;
+        }
+
+        .upload-file-note {
+            margin: 0;
+            color: #c9b08a;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .upload-feedback-compact {
+            margin-top: 6px;
+            font-size: 0.9rem;
+        }
+
+        .editor-shell {
+            margin-top: 18px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px dashed rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .editor-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 12px 14px;
+            background: rgba(20, 20, 25, 0.96);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .editor-tool-btn,
+        .editor-size-select {
+            height: 36px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.92rem;
+        }
+
+        .editor-tool-btn {
+            min-width: 36px;
+            padding: 0 11px;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.04);
+            color: #f5f1e8;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .editor-tool-btn:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-1px);
+            opacity: 0.98;
+        }
+
+        .editor-size-select {
+            padding: 0 12px;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.04);
+            color: #f5f1e8;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .editor-size-select option {
+            color: #111;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background: rgba(255,255,255,0.12);
+            margin: 0 2px;
+        }
+
+        .import-preview {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 24px;
+            color: #ddd3c4;
+            min-height: 260px;
+            overflow-wrap: break-word;
+            outline: none;
+            scroll-behavior: smooth;
+        }
+
+        .import-preview:focus {
+            box-shadow: inset 0 0 0 2px rgba(240, 198, 116, 0.22);
+        }
+
+        .import-preview h1,
+        .import-preview h2,
+        .import-preview h3 {
+            color: #fff8ee;
+            line-height: 1.3;
+        }
+
+        .import-preview h1 {
+            font-size: 2rem;
+            margin: 0 0 18px;
+        }
+
+        .import-preview h2 {
+            font-size: 1.5rem;
+            margin: 26px 0 14px;
+        }
+
+        .import-preview h3 {
+            font-size: 1.2rem;
+            color: #f0c674;
+            margin: 22px 0 12px;
+        }
+
+        .import-preview p {
+            margin: 0 0 18px;
+            color: #f5f1e8;
+            line-height: 1.95;
+        }
+
+        .import-preview ul,
+        .import-preview ol {
+            margin: 0 0 18px 22px;
+            color: #f5f1e8;
+            line-height: 1.9;
+        }
+
+        .import-preview li {
+            margin-bottom: 8px;
+        }
+
+        .import-preview blockquote {
+            margin: 0 0 18px;
+            padding-left: 18px;
+            border-left: 3px solid rgba(240, 198, 116, 0.35);
+            color: #ddd3c4;
+            font-style: italic;
+        }
+
+        .import-preview em {
+            font-style: italic;
+        }
+
+        .import-preview strong {
+            font-weight: bold;
+            color: #fff8ee;
+        }
+
+        .import-preview u {
+            text-decoration: underline;
+        }
+
+        .import-preview hr {
+            border: none;
+            height: 1px;
+            background: rgba(255,255,255,0.12);
+            margin: 28px 0;
+        }
+
+        .story-list {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .story-item {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .story-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(240, 198, 116, 0.20);
+            background: rgba(255,255,255,0.055);
+        }
+
+        .story-item-cover {
+            width: 110px;
+            height: 150px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c9b08a;
+            font-size: 0.82rem;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .story-item-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .story-item-title {
+            color: #fff8ee;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .story-item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .story-badge {
+            font-size: 0.82rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #cfc5b7;
+        }
+
+        .story-badge.status-ongoing {
+            color: #ffe2a6;
+            background: rgba(240, 198, 116, 0.14);
+            border-color: rgba(240, 198, 116, 0.24);
+        }
+
+        .story-badge.status-finished {
+            color: #d6f3dc;
+            background: rgba(120, 220, 160, 0.12);
+            border-color: rgba(120, 220, 160, 0.22);
+        }
+
+        .story-item-summary {
+            color: #ddd3c4;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .story-item-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .story-item-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.05);
+            color: #c9b08a;
+            font-size: 0.78rem;
+        }
+
+        .stories-view,
+        .story-detail-view {
+            display: none;
+        }
+
+        .stories-view.active,
+        .story-detail-view.active {
+            display: block;
+        }
+
+        .story-detail-top {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .story-detail-cover {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c9b08a;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .story-detail-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .story-detail-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 18px;
+        }
+
+        .story-detail-card:first-of-type {
+            margin-top: 0;
+        }
+
+        .story-detail-title {
+            font-size: 1.8rem;
+            color: #fff8ee;
+            margin-bottom: 12px;
+        }
+
+        .story-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .story-detail-summary {
+            color: #ddd3c4;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .story-detail-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .chapters-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .chapter-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            flex-wrap: wrap;
+        }
+
+        .chapter-item-main {
+            flex: 1 1 420px;
+            min-width: 220px;
+        }
+
+        .chapter-number {
+            color: #c9b08a;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+        }
+
+        .chapter-title {
+            color: #fff8ee;
+            font-size: 1.02rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .chapter-date {
+            color: #bfb2a0;
+            font-size: 0.86rem;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-sidebar {
+                position: static;
+            }
+
+            .dashboard-content {
+                min-height: auto;
+            }
+
+            .panel h1 {
+                font-size: 2rem;
+            }
+
+            .writer-summary,
+            .select-grid,
+            .compact-story-grid,
+            .story-detail-top {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding-top: 100px;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+
+            .import-preview {
+                max-height: 60vh;
+            }
+
+            .story-item {
+                grid-template-columns: 1fr;
+            }
+
+            .story-item-cover {
+                width: 100%;
+                max-width: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <div class="dashboard-shell">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-title">Espace écrivain</div>
+
+            <div class="sidebar-group">
+                <button class="sidebar-item active" data-panel="overview-panel" onclick="showPanel('overview-panel', this)">
+                    Vue d’ensemble
+                </button>
+
+                <button class="sidebar-item" data-panel="stories-panel" onclick="showPanel('stories-panel', this)">
+                    Mes histoires
+                </button>
+
+                <button class="sidebar-item" data-panel="drafts-panel" onclick="showPanel('drafts-panel', this)">
+                    Brouillons
+                </button>
+
+                <button class="sidebar-item" data-panel="publish-panel" onclick="showPanel('publish-panel', this)">
+                    Publier
+                </button>
+
+                <button class="sidebar-item" data-panel="stats-panel" onclick="showPanel('stats-panel', this)">
+                    Statistiques
+                </button>
+
+                <button class="sidebar-item" onclick="goWriterProfile()">
+                    Profil écrivain
+                </button>
+
+                <button class="sidebar-item" onclick="goSettings()">
+                    Paramètres
+                </button>
+            </div>
+        </aside>
+
+        <main class="dashboard-content">
+            <section class="panel active" id="overview-panel">
+                <div class="panel-kicker">Vue d’ensemble</div>
+                <h1 id="overview-title">Bienvenue</h1>
+                <p class="panel-subtitle" id="overview-subtitle">
+                    Chargement de ton espace écrivain...
+                </p>
+
+                <div class="dashboard-card">
+                    <h2>Ton atelier d’écriture</h2>
+                    <p>
+                        Ici, tu pourras retrouver tout ce qui concerne tes histoires :
+                        brouillons, publications, statistiques et outils d’écriture.
+                    </p>
+
+                    <div class="writer-summary">
+                        <div class="summary-box">
+                            <div class="summary-label">Histoires publiées</div>
+                            <div class="summary-value" id="overview-stories-count">—</div>
+                            <div class="summary-note">Tes publications apparaîtront ici.</div>
+                        </div>
+
+                        <div class="summary-box">
+                            <div class="summary-label">Chapitres publiés</div>
+                            <div class="summary-value" id="overview-chapters-count">—</div>
+                            <div class="summary-note">Le total de tes chapitres sera affiché ici.</div>
+                        </div>
+
+                        <div class="summary-box">
+                            <div class="summary-label">Lectures</div>
+                            <div class="summary-value">—</div>
+                            <div class="summary-note">Les futures vues pourront être affichées ici.</div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="primary-button" onclick="showPanelFromMenu('publish-panel')">
+                            Commencer une histoire
+                        </button>
+
+                        <button class="secondary-button" onclick="showPanelFromMenu('stories-panel')">
+                            Gérer mes histoires
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="stories-panel">
+                <div class="panel-kicker">Mes histoires</div>
+                <h1>Mes histoires</h1>
+                <p class="panel-subtitle">
+                    Clique sur une histoire pour ouvrir sa fiche complète, voir ses chapitres et choisir la suite.
+                </p>
+
+                <div class="stories-view active" id="stories-library-view">
+                    <div class="dashboard-card">
+                        <h2>Bibliothèque auteur</h2>
+                        <div id="writer-stories-list" class="story-list"></div>
+                        <div id="writer-stories-feedback" class="small-note"></div>
+                    </div>
+                </div>
+
+                <div class="story-detail-view" id="story-detail-view">
+                    <div class="dashboard-card">
+                        <div class="quick-actions" style="margin-top:0; margin-bottom:18px;">
+                            <button class="secondary-button" type="button" onclick="closeStoryDetail()">
+                                ← Retour à la bibliothèque
+                            </button>
+                        </div>
+
+                        <div class="story-detail-top">
+                            <div class="story-detail-cover" id="story-detail-cover">
+                                Pas de couverture
+                            </div>
+
+                            <div class="story-detail-card" style="margin-top:0;">
+                                <div class="story-detail-title" id="story-detail-title">Titre</div>
+
+                                <div class="story-detail-meta" id="story-detail-meta"></div>
+
+                                <div class="story-detail-summary" id="story-detail-summary"></div>
+
+                                <div class="story-item-tags" id="story-detail-tags"></div>
+
+                                <div class="story-detail-actions">
+                                    <button class="primary-button" type="button" onclick="openContinueStoryForm()">
+                                        Continuer l’histoire
+                                    </button>
+
+                                    <button class="secondary-button" type="button" onclick="readCurrentStory()">
+                                        Lire
+                                    </button>
+
+                                    <button class="danger-button" type="button" onclick="deleteCurrentStory()">
+                                        Supprimer
+                                    </button>
+                                </div>
+
+                                <div class="small-note" id="story-detail-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="story-detail-card">
+                            <h2>Chapitres publiés</h2>
+                            <p style="margin-bottom:16px;">
+                                Voici la liste des chapitres déjà en ligne pour cette histoire.
+                            </p>
+
+                            <div id="story-chapters-list" class="chapters-list"></div>
+                        </div>
+
+                        <div class="story-detail-card" id="continue-story-card" style="display:none;">
+                            <h2>Continuer l’histoire</h2>
+                            <p style="margin-bottom:16px;">
+                                Ajoute ici le chapitre suivant.
+                            </p>
+
+                            <div class="story-meta-fields">
+                                <div>
+                                    <label for="next-chapter-name-input" class="field-label">Nom du chapitre suivant</label>
+                                    <input
+                                        id="next-chapter-name-input"
+                                        class="text-input"
+                                        type="text"
+                                        placeholder="Ex. Chapitre 2 — ..."
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="dashboard-card upload-card-compact" style="margin-top:18px; margin-bottom:0;">
+                                <h2 style="font-size:1.05rem;">Importer le chapitre</h2>
+                                <p>Fichier Word .docx uniquement.</p>
+
+                                <div class="upload-row-compact">
+                                    <input
+                                        type="file"
+                                        id="next-docx-file-input"
+                                        accept=".docx"
+                                        style="display:none;"
+                                    >
+
+                                    <button class="primary-button" type="button" onclick="document.getElementById('next-docx-file-input').click()">
+                                        Choisir un .docx
+                                    </button>
+
+                                    <p class="upload-file-note" id="next-docx-file-name">
+                                        Aucun fichier sélectionné.
+                                    </p>
+                                </div>
+
+                                <div id="next-import-feedback" class="small-note upload-feedback-compact"></div>
+                            </div>
+
+                            <div class="editor-shell">
+                                <div class="editor-toolbar">
+                                    <button class="editor-tool-btn" type="button" onclick="execContinueEditorCommand('bold')"><strong>B</strong></button>
+                                    <button class="editor-tool-btn" type="button" onclick="execContinueEditorCommand('italic')"><em>I</em></button>
+                                    <button class="editor-tool-btn" type="button" onclick="execContinueEditorCommand('underline')"><u>U</u></button>
+
+                                    <div class="toolbar-separator"></div>
+
+                                    <button class="editor-tool-btn" type="button" onclick="formatContinueBlock('P')">P</button>
+                                    <button class="editor-tool-btn" type="button" onclick="formatContinueBlock('H1')">H1</button>
+                                    <button class="editor-tool-btn" type="button" onclick="formatContinueBlock('H2')">H2</button>
+                                    <button class="editor-tool-btn" type="button" onclick="formatContinueBlock('H3')">H3</button>
+                                </div>
+
+                                <div
+                                    id="next-import-preview"
+                                    class="import-preview"
+                                    contenteditable="true"
+                                    spellcheck="true"
+                                ></div>
+                            </div>
+
+                            <div class="quick-actions">
+                                <button class="primary-button" type="button" onclick="publishNextChapter()">
+                                    Publier ce chapitre
+                                </button>
+
+                                <button class="secondary-button" type="button" onclick="cancelContinueStory()">
+                                    Annuler
+                                </button>
+                            </div>
+
+                            <div id="continue-story-feedback" class="small-note"></div>
+                        </div>
+
+                        <div class="story-detail-card" id="edit-chapter-card" style="display:none;">
+                            <h2>Modifier un chapitre</h2>
+                            <p style="margin-bottom:16px;">
+                                Tu peux modifier ici le titre et le contenu du chapitre sélectionné.
+                            </p>
+
+                            <div class="story-meta-fields">
+                                <div>
+                                    <label for="edit-chapter-name-input" class="field-label">Nom du chapitre</label>
+                                    <input
+                                        id="edit-chapter-name-input"
+                                        class="text-input"
+                                        type="text"
+                                        placeholder="Nom du chapitre"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="editor-shell">
+                                <div class="editor-toolbar">
+                                    <button class="editor-tool-btn" type="button" onclick="execEditEditorCommand('bold')"><strong>B</strong></button>
+                                    <button class="editor-tool-btn" type="button" onclick="execEditEditorCommand('italic')"><em>I</em></button>
+                                    <button class="editor-tool-btn" type="button" onclick="execEditEditorCommand('underline')"><u>U</u></button>
+
+                                    <div class="toolbar-separator"></div>
+
+                                    <button class="editor-tool-btn" type="button" onclick="formatEditBlock('P')">P</button>
+                                    <button class="editor-tool-btn" type="button" onclick="formatEditBlock('H1')">H1</button>
+                                    <button class="editor-tool-btn" type="button" onclick="formatEditBlock('H2')">H2</button>
+                                    <button class="editor-tool-btn" type="button" onclick="formatEditBlock('H3')">H3</button>
+                                </div>
+
+                                <div
+                                    id="edit-chapter-preview"
+                                    class="import-preview"
+                                    contenteditable="true"
+                                    spellcheck="true"
+                                ></div>
+                            </div>
+
+                            <div class="quick-actions">
+                                <button class="primary-button" type="button" onclick="saveChapterEdit()">
+                                    Enregistrer les modifications
+                                </button>
+
+                                <button class="secondary-button" type="button" onclick="cancelChapterEdit()">
+                                    Annuler
+                                </button>
+                            </div>
+
+                            <div id="edit-chapter-feedback" class="small-note"></div>
+                        </div>
+
+                        <div class="story-detail-card" id="read-chapter-card" style="display:none;">
+    <h2 id="read-chapter-title">Lecture</h2>
+    <p id="read-chapter-subtitle" style="margin-bottom:16px;"></p>
+
+    <div id="read-chapter-content" class="import-preview" style="max-height:none;"></div>
+
+    <div class="quick-actions">
+        <button class="secondary-button" type="button" onclick="closeReadChapter()">
+            Fermer
+        </button>
+    </div>
+</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="drafts-panel">
+                <div class="panel-kicker">Brouillons</div>
+                <h1>Brouillons</h1>
+                <p class="panel-subtitle">
+                    Les textes non publiés pourront être stockés ici pour être repris plus tard.
+                </p>
+
+                <div class="dashboard-card">
+                    <h2>Travaux en cours</h2>
+                    <p>
+                        On pourra bientôt y montrer les brouillons, la dernière modification
+                        et un bouton pour reprendre l’écriture.
+                    </p>
+
+                    <div class="story-placeholder">
+                        Aucun brouillon en ligne pour l’instant.
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="publish-panel">
+                <div class="panel-kicker">Publier</div>
+                <h1>Publier une histoire</h1>
+                <p class="panel-subtitle">
+                    Importe un fichier .docx, ajuste son rendu si besoin, ajoute les informations de l’œuvre,
+                    puis publie-la directement en ligne.
+                </p>
+
+                <div class="dashboard-card">
+                    <h2>Informations de l’histoire</h2>
+
+                    <div class="compact-story-grid">
+                        <div class="story-info-box">
+                            <h3>Couverture</h3>
+
+                            <div class="cover-box">
+                                <div id="cover-preview-shell" class="cover-preview-shell">
+                                    <div id="cover-preview-placeholder" class="cover-preview-placeholder">
+                                        Aucune couverture sélectionnée.<br>
+                                        La prévisualisation apparaîtra ici.
+                                    </div>
+
+                                    <img
+                                        id="cover-preview-image"
+                                        class="cover-preview-image"
+                                        alt="Prévisualisation de la couverture"
+                                    >
+                                </div>
+
+                                <input
+                                    id="story-cover-input"
+                                    type="file"
+                                    accept="image/png, image/jpeg, image/webp"
+                                    style="display: none;"
+                                >
+
+                                <div class="cover-actions">
+                                    <button
+                                        class="tiny-button"
+                                        type="button"
+                                        onclick="document.getElementById('story-cover-input').click()"
+                                    >
+                                        Choisir une couverture
+                                    </button>
+
+                                    <button
+                                        class="tiny-button"
+                                        type="button"
+                                        id="remove-cover-button"
+                                        onclick="clearSelectedCover()"
+                                        style="display:none;"
+                                    >
+                                        Retirer
+                                    </button>
+                                </div>
+
+                                <div id="cover-file-feedback" class="cover-help">
+                                    Aucune couverture sélectionnée.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="story-info-box">
+                            <h3>Détails</h3>
+
+                            <div class="story-meta-fields">
+                                <div>
+                                    <label for="story-title-input" class="field-label">Titre</label>
+                                    <input
+                                        id="story-title-input"
+                                        class="text-input"
+                                        type="text"
+                                        placeholder="Titre de l’histoire"
+                                    >
+                                </div>
+
+                                <div>
+                                    <label for="story-chapter-name-input" class="field-label">Nom du chapitre</label>
+                                    <input
+                                        id="story-chapter-name-input"
+                                        class="text-input"
+                                        type="text"
+                                        placeholder="Ex. Chapitre 1 — La porte entrebâillée"
+                                    >
+                                </div>
+
+                                <div>
+                                    <label for="story-summary-input" class="field-label">Résumé</label>
+                                    <textarea
+                                        id="story-summary-input"
+                                        class="text-area"
+                                        placeholder="Quelques lignes pour présenter l’histoire..."
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="select-grid">
+                        <div>
+                            <label for="story-category-input" class="field-label">Catégorie</label>
+                            <select id="story-category-input" class="text-input">
+                                <option value="">Choisir une catégorie</option>
+                                <option value="fantasy">Fantasy</option>
+                                <option value="science-fiction">Science-fiction</option>
+                                <option value="romance">Romance</option>
+                                <option value="policier">Policier</option>
+                                <option value="horreur">Horreur</option>
+                                <option value="drame">Drame</option>
+                                <option value="contenu mature">Contenu mature</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="story-status-input" class="field-label">Statut</label>
+                            <select id="story-status-input" class="text-input">
+                                <option value="">Choisir un statut</option>
+                                <option value="en cours">En cours</option>
+                                <option value="terminée">Terminée</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <label class="field-label">Tags (4 max)</label>
+                        <div id="tag-list" class="tag-list">
+                            <label><input type="checkbox" class="story-tag-input" value="slow burn"> Slow burn</label>
+                            <label><input type="checkbox" class="story-tag-input" value="fast burn"> Fast burn</label>
+                            <label><input type="checkbox" class="story-tag-input" value="magie"> Magie</label>
+                            <label><input type="checkbox" class="story-tag-input" value="dragons"> Dragons</label>
+                            <label><input type="checkbox" class="story-tag-input" value="guerre"> Guerre</label>
+                            <label><input type="checkbox" class="story-tag-input" value="quête"> Quête</label>
+                            <label><input type="checkbox" class="story-tag-input" value="royauté"> Royauté</label>
+                            <label><input type="checkbox" class="story-tag-input" value="politique"> Politique</label>
+                            <label><input type="checkbox" class="story-tag-input" value="enquête"> Enquête</label>
+                            <label><input type="checkbox" class="story-tag-input" value="mystère"> Mystère</label>
+                            <label><input type="checkbox" class="story-tag-input" value="thriller"> Thriller</label>
+                            <label><input type="checkbox" class="story-tag-input" value="sombre"> Sombre</label>
+                            <label><input type="checkbox" class="story-tag-input" value="poétique"> Poétique</label>
+                            <label><input type="checkbox" class="story-tag-input" value="passion"> Passion</label>
+                            <label><input type="checkbox" class="story-tag-input" value="amitié"> Amitié</label>
+                            <label><input type="checkbox" class="story-tag-input" value="famille"> Famille</label>
+                            <label><input type="checkbox" class="story-tag-input" value="tragédie"> Tragédie</label>
+                            <label><input type="checkbox" class="story-tag-input" value="vengeance"> Vengeance</label>
+                            <label><input type="checkbox" class="story-tag-input" value="survie"> Survie</label>
+                            <label><input type="checkbox" class="story-tag-input" value="aventure"> Aventure</label>
+                            <label><input type="checkbox" class="story-tag-input" value="voyage"> Voyage</label>
+                            <label><input type="checkbox" class="story-tag-input" value="espace"> Espace</label>
+                            <label><input type="checkbox" class="story-tag-input" value="ia"> IA</label>
+                            <label><input type="checkbox" class="story-tag-input" value="dystopie"> Dystopie</label>
+                            <label><input type="checkbox" class="story-tag-input" value="post-apocalyptique"> Post-apo</label>
+                            <label><input type="checkbox" class="story-tag-input" value="créatures"> Créatures</label>
+                            <label><input type="checkbox" class="story-tag-input" value="malédiction"> Malédiction</label>
+                            <label><input type="checkbox" class="story-tag-input" value="sorcières"> Sorcières</label>
+                            <label><input type="checkbox" class="story-tag-input" value="forêt"> Forêt</label>
+                            <label><input type="checkbox" class="story-tag-input" value="mer"> Mer</label>
+                            <label><input type="checkbox" class="story-tag-input" value="campus"> Campus</label>
+                            <label><input type="checkbox" class="story-tag-input" value="historique"> Historique</label>
+                            <label><input type="checkbox" class="story-tag-input" value="psychologique"> Psychologique</label>
+                            <label><input type="checkbox" class="story-tag-input" value="huis clos"> Huis clos</label>
+                            <label><input type="checkbox" class="story-tag-input" value="légendes"> Légendes</label>
+                            <label><input type="checkbox" class="story-tag-input" value="destin"> Destin</label>
+                            <label><input type="checkbox" class="story-tag-input" value="slow life"> Slow life</label>
+                            <label><input type="checkbox" class="story-tag-input" value="feel good"> Feel good</label>
+                            <label><input type="checkbox" class="story-tag-input" value="triangle amoureux"> Triangle amoureux</label>
+                            <label><input type="checkbox" class="story-tag-input" value="enemies to lovers"> Enemies to lovers</label>
+                            <label><input type="checkbox" class="story-tag-input" value="friends to lovers"> Friends to lovers</label>
+                            <label><input type="checkbox" class="story-tag-input" value="seconde chance"> Seconde chance</label>
+                        </div>
+                        <p id="tag-limit-feedback" class="small-note"></p>
+                    </div>
+                </div>
+
+                <div class="dashboard-card upload-card-compact">
+                    <h2>Importer un manuscrit</h2>
+                    <p>
+                        Fichier Word .docx uniquement.
+                    </p>
+
+                    <div class="upload-row-compact">
+                        <input
+                            type="file"
+                            id="docx-file-input"
+                            accept=".docx"
+                            style="display: none;"
+                        >
+
+                        <button class="primary-button" type="button" onclick="document.getElementById('docx-file-input').click()">
+                            Choisir un .docx
+                        </button>
+
+                        <p class="upload-file-note" id="docx-file-name">
+                            Aucun fichier sélectionné.
+                        </p>
+                    </div>
+
+                    <div id="import-feedback" class="small-note upload-feedback-compact"></div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>Aperçu du texte</h2>
+                    <p>
+                        Vérifie et ajuste ici le rendu importé avant publication.
+                    </p>
+
+                    <div class="editor-shell">
+                        <div class="editor-toolbar">
+                            <button class="editor-tool-btn" type="button" onclick="execEditorCommand('bold')"><strong>B</strong></button>
+                            <button class="editor-tool-btn" type="button" onclick="execEditorCommand('italic')"><em>I</em></button>
+                            <button class="editor-tool-btn" type="button" onclick="execEditorCommand('underline')"><u>U</u></button>
+
+                            <div class="toolbar-separator"></div>
+
+                            <button class="editor-tool-btn" type="button" onclick="formatBlock('P')">P</button>
+                            <button class="editor-tool-btn" type="button" onclick="formatBlock('H1')">H1</button>
+                            <button class="editor-tool-btn" type="button" onclick="formatBlock('H2')">H2</button>
+                            <button class="editor-tool-btn" type="button" onclick="formatBlock('H3')">H3</button>
+
+                            <div class="toolbar-separator"></div>
+
+                            <button class="editor-tool-btn" type="button" onclick="execEditorCommand('insertUnorderedList')">• Liste</button>
+                            <button class="editor-tool-btn" type="button" onclick="execEditorCommand('insertOrderedList')">1. Liste</button>
+                            <button class="editor-tool-btn" type="button" onclick="execEditorCommand('formatBlock', 'blockquote')">❝</button>
+                            <button class="editor-tool-btn" type="button" onclick="insertSeparator()">—</button>
+
+                            <div class="toolbar-separator"></div>
+
+                            <select class="editor-size-select" onchange="applyFontSize(this.value)">
+                                <option value="">Taille</option>
+                                <option value="3">Normal</option>
+                                <option value="4">Grand</option>
+                                <option value="5">Très grand</option>
+                            </select>
+                        </div>
+
+                        <div
+                            id="import-preview"
+                            class="import-preview"
+                            contenteditable="true"
+                            spellcheck="true"
+                        ></div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="primary-button" type="button" onclick="publishStory()">
+                            Publier maintenant
+                        </button>
+
+                        <button class="secondary-button" type="button" onclick="clearPublishForm()">
+                            Réinitialiser
+                        </button>
+                    </div>
+
+                    <div id="publish-feedback" class="small-note"></div>
+                </div>
+            </section>
+
+            <section class="panel" id="stats-panel">
+                <div class="panel-kicker">Statistiques</div>
+                <h1>Statistiques</h1>
+                <p class="panel-subtitle">
+                    Cette zone servira plus tard à suivre les lectures, les abonnements ou les performances des textes.
+                </p>
+
+                <div class="dashboard-card">
+                    <h2>À venir</h2>
+                    <p>
+                        On pourra y afficher les vues, les favoris, la progression moyenne des lecteurs
+                        ou encore les chapitres les plus lus.
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let importedHtml = "";
+        let currentUser = null;
+        let selectedCoverPreviewUrl = "";
+        let coverUploadBlob = null;
+        let selectedStory = null;
+        let currentStoryChapters = [];
+        let continueImportedHtml = "";
+        let editingChapterId = null;
+
+        function goHome() { window.location.href = "index.html"; }
+        function goLogin() { window.location.href = "login.html"; }
+        function goSignup() { window.location.href = "signup.html"; }
+        function goDashboard() { window.location.href = "dashboard.html"; }
+        function goReaderDashboard() { window.location.href = "reader-dashboard.html"; }
+        function goWriterDashboard() { window.location.href = "writer-dashboard.html"; }
+        function goAdminDashboard() { window.location.href = "admin-dashboard.html"; }
+        function goWriterProfile() { window.location.href = "writer-profile.html"; }
+        function goSettings() { window.location.href = "settings.html"; }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+        }
+
+        function setupProfileDropdown() {
+            const trigger = document.getElementById("profile-menu-trigger");
+            const dropdown = document.getElementById("profile-dropdown");
+            if (!trigger || !dropdown) return;
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdown.classList.toggle("open");
+            });
+
+            dropdown.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("open");
+            });
+        }
+
+        async function loadHeader() {
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
+
+            if (error || !data.user) {
+                header.innerHTML = `
+                    <button class="header-btn" onclick="goLogin()">Connexion</button>
+                    <button class="header-btn" onclick="goSignup()">Inscription</button>
+                `;
+                return;
+            }
+
+            const user = data.user;
+            const metadata = user.user_metadata || {};
+            const avatarUrl = metadata.avatar_url || "images/default-avatar.png";
+            const pseudo = metadata.pseudo || user.email || "Profil";
+            const roles = Array.isArray(metadata.roles)
+                ? metadata.roles
+                : (metadata.role ? [metadata.role] : ["reader"]);
+
+            const navButtons = [];
+
+            if (roles.includes("reader")) {
+                navButtons.push(`<button class="header-btn" onclick="goReaderDashboard()">Lecture</button>`);
+            }
+
+            if (roles.includes("admin")) {
+                navButtons.push(`<button class="header-btn" onclick="goAdminDashboard()">Admin</button>`);
+            }
+
+            header.innerHTML = `
+                ${navButtons.join("")}
+
+                <div class="profile-menu-wrapper">
+                    <button class="header-btn profile-btn profile-trigger" id="profile-menu-trigger" type="button">
+                        <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+                        <span>${pseudo}</span>
+                    </button>
+
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <button class="dropdown-item" onclick="goDashboard()">Tableau de bord</button>
+                        <button class="dropdown-item" onclick="goWriterProfile()">Profil écrivain</button>
+                        <button class="dropdown-item" onclick="goSettings()">Paramètres</button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" onclick="logout()">Se déconnecter</button>
+                    </div>
+                </div>
+            `;
+
+            setupProfileDropdown();
+        }
+
+        function showPanel(panelId, button) {
+            document.querySelectorAll(".panel").forEach(panel => panel.classList.remove("active"));
+            document.querySelectorAll(".sidebar-item[data-panel]").forEach(item => item.classList.remove("active"));
+
+            const panel = document.getElementById(panelId);
+            if (panel) panel.classList.add("active");
+            if (button) button.classList.add("active");
+        }
+
+        function showPanelFromMenu(panelId) {
+            const button = document.querySelector(`.sidebar-item[data-panel="${panelId}"]`);
+            showPanel(panelId, button);
+        }
+
+        function execEditorCommand(command, value = null) {
+            document.execCommand(command, false, value);
+            document.getElementById("import-preview").focus();
+        }
+
+        function formatBlock(tag) {
+            document.execCommand("formatBlock", false, tag);
+            document.getElementById("import-preview").focus();
+        }
+
+        function insertSeparator() {
+            document.execCommand("insertHorizontalRule", false, null);
+            document.getElementById("import-preview").focus();
+        }
+
+        function applyFontSize(size) {
+            if (!size) return;
+            document.execCommand("fontSize", false, size);
+            document.getElementById("import-preview").focus();
+        }
+
+        function execContinueEditorCommand(command, value = null) {
+            document.execCommand(command, false, value);
+            document.getElementById("next-import-preview").focus();
+        }
+
+        function formatContinueBlock(tag) {
+            document.execCommand("formatBlock", false, tag);
+            document.getElementById("next-import-preview").focus();
+        }
+
+        function execEditEditorCommand(command, value = null) {
+            document.execCommand(command, false, value);
+            document.getElementById("edit-chapter-preview").focus();
+        }
+
+        function formatEditBlock(tag) {
+            document.execCommand("formatBlock", false, tag);
+            document.getElementById("edit-chapter-preview").focus();
+        }
+
+        function sanitizeImportedHtml(html) {
+            const temp = document.createElement("div");
+            temp.innerHTML = html;
+
+            temp.querySelectorAll("script, style, iframe, object").forEach(el => el.remove());
+
+            temp.querySelectorAll("*").forEach(el => {
+                [...el.attributes].forEach(attr => {
+                    const name = attr.name.toLowerCase();
+                    if (name.startsWith("on")) {
+                        el.removeAttribute(attr.name);
+                    }
+                });
+            });
+
+            return temp.innerHTML.trim();
+        }
+
+        async function importDocx(file) {
+            const feedback = document.getElementById("import-feedback");
+            const fileName = document.getElementById("docx-file-name");
+            const preview = document.getElementById("import-preview");
+
+            fileName.textContent = file ? `Fichier sélectionné : ${file.name}` : "Aucun fichier sélectionné.";
+            feedback.textContent = "";
+            preview.innerHTML = "";
+
+            if (!file) return;
+
+            try {
+                feedback.textContent = "Import du fichier en cours...";
+
+                const arrayBuffer = await file.arrayBuffer();
+                const result = await window.mammoth.convertToHtml(
+                    { arrayBuffer },
+                    {
+                        styleMap: [
+                            "p[style-name='Title'] => h1:fresh",
+                            "p[style-name='Heading 1'] => h1:fresh",
+                            "p[style-name='Heading 2'] => h2:fresh",
+                            "p[style-name='Heading 3'] => h3:fresh"
+                        ]
+                    }
+                );
+
+                importedHtml = sanitizeImportedHtml(result.value);
+                preview.innerHTML = importedHtml || "<p>Le document semble vide.</p>";
+
+                feedback.textContent = "Import terminé.";
+            } catch (error) {
+                console.error(error);
+                importedHtml = "";
+                preview.innerHTML = "";
+                feedback.textContent = "Impossible de lire ce fichier .docx.";
+            }
+        }
+
+        async function importNextChapterDocx(file) {
+            const feedback = document.getElementById("next-import-feedback");
+            const fileName = document.getElementById("next-docx-file-name");
+            const preview = document.getElementById("next-import-preview");
+
+            fileName.textContent = file ? `Fichier sélectionné : ${file.name}` : "Aucun fichier sélectionné.";
+            feedback.textContent = "";
+            preview.innerHTML = "";
+
+            if (!file) return;
+
+            try {
+                feedback.textContent = "Import du fichier en cours...";
+
+                const arrayBuffer = await file.arrayBuffer();
+                const result = await window.mammoth.convertToHtml(
+                    { arrayBuffer },
+                    {
+                        styleMap: [
+                            "p[style-name='Title'] => h1:fresh",
+                            "p[style-name='Heading 1'] => h1:fresh",
+                            "p[style-name='Heading 2'] => h2:fresh",
+                            "p[style-name='Heading 3'] => h3:fresh"
+                        ]
+                    }
+                );
+
+                continueImportedHtml = sanitizeImportedHtml(result.value);
+                preview.innerHTML = continueImportedHtml || "<p>Le document semble vide.</p>";
+                feedback.textContent = "Import terminé.";
+            } catch (error) {
+                console.error(error);
+                continueImportedHtml = "";
+                preview.innerHTML = "";
+                feedback.textContent = "Impossible de lire ce fichier .docx.";
+            }
+        }
+
+        async function compressImageFile(file) {
+            const bitmap = await createImageBitmap(file);
+
+            const maxWidth = 900;
+            const maxHeight = 1350;
+
+            let { width, height } = bitmap;
+            const ratio = Math.min(maxWidth / width, maxHeight / height, 1);
+
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(bitmap, 0, 0, width, height);
+
+            const blob = await new Promise((resolve) => {
+                canvas.toBlob(resolve, "image/jpeg", 0.86);
+            });
+
+            return blob;
+        }
+
+        function updateCoverPreview(url) {
+            const shell = document.getElementById("cover-preview-shell");
+            const placeholder = document.getElementById("cover-preview-placeholder");
+            const image = document.getElementById("cover-preview-image");
+            const removeButton = document.getElementById("remove-cover-button");
+
+            if (url) {
+                image.src = url;
+                image.style.display = "block";
+                placeholder.style.display = "none";
+                shell.classList.add("has-image");
+                removeButton.style.display = "inline-flex";
+            } else {
+                image.removeAttribute("src");
+                image.style.display = "none";
+                placeholder.style.display = "block";
+                shell.classList.remove("has-image");
+                removeButton.style.display = "none";
+            }
+        }
+
+        function clearSelectedCover() {
+            if (selectedCoverPreviewUrl) {
+                URL.revokeObjectURL(selectedCoverPreviewUrl);
+            }
+
+            selectedCoverPreviewUrl = "";
+            coverUploadBlob = null;
+
+            document.getElementById("story-cover-input").value = "";
+            document.getElementById("cover-file-feedback").textContent = "Aucune couverture sélectionnée.";
+            updateCoverPreview("");
+        }
+
+        async function handleCoverSelection(file) {
+            const feedback = document.getElementById("cover-file-feedback");
+
+            if (!file) {
+                clearSelectedCover();
+                return;
+            }
+
+            try {
+                feedback.textContent = "Préparation de la couverture...";
+                coverUploadBlob = await compressImageFile(file);
+
+                if (selectedCoverPreviewUrl) {
+                    URL.revokeObjectURL(selectedCoverPreviewUrl);
+                }
+
+                selectedCoverPreviewUrl = URL.createObjectURL(coverUploadBlob);
+                updateCoverPreview(selectedCoverPreviewUrl);
+
+                const kb = Math.round(coverUploadBlob.size / 1024);
+                feedback.textContent = `Couverture prête. Version optimisée : ~${kb} Ko.`;
+            } catch (error) {
+                console.error(error);
+                clearSelectedCover();
+                feedback.textContent = "Impossible de préparer cette image.";
+            }
+        }
+
+        function getSelectedTags() {
+            return Array.from(document.querySelectorAll(".story-tag-input:checked")).map(input => input.value);
+        }
+
+        function enforceTagLimit() {
+            const inputs = Array.from(document.querySelectorAll(".story-tag-input"));
+            const checked = inputs.filter(input => input.checked);
+            const feedback = document.getElementById("tag-limit-feedback");
+
+            if (checked.length >= 4) {
+                inputs.forEach(input => {
+                    if (!input.checked) input.disabled = true;
+                });
+                feedback.textContent = "Tu peux sélectionner jusqu’à 4 tags.";
+            } else {
+                inputs.forEach(input => input.disabled = false);
+                feedback.textContent = checked.length ? `${checked.length}/4 tag(s) sélectionné(s).` : "";
+            }
+        }
+
+        async function uploadCoverIfNeeded(userId) {
+            if (!coverUploadBlob) return null;
+
+            const filePath = `${userId}/${Date.now()}-cover.jpg`;
+
+            const { error: uploadError } = await supabaseClient
+                .storage
+                .from("story-covers")
+                .upload(filePath, coverUploadBlob, {
+                    contentType: "image/jpeg",
+                    upsert: false
+                });
+
+            if (uploadError) throw uploadError;
+
+            const { data } = supabaseClient.storage.from("story-covers").getPublicUrl(filePath);
+            return data.publicUrl;
+        }
+
+        async function publishStory() {
+            const feedback = document.getElementById("publish-feedback");
+            feedback.textContent = "";
+
+            if (!currentUser) {
+                feedback.textContent = "Tu dois être connecté.";
+                return;
+            }
+
+            const title = document.getElementById("story-title-input").value.trim();
+            const chapterName = document.getElementById("story-chapter-name-input").value.trim();
+            const summary = document.getElementById("story-summary-input").value.trim();
+            const category = document.getElementById("story-category-input").value.trim();
+            const status = document.getElementById("story-status-input").value.trim();
+            const tags = getSelectedTags();
+            const content = document.getElementById("import-preview").innerHTML.trim();
+
+            if (!title || !summary || !chapterName || !category || !status || !content) {
+                feedback.textContent = "Remplis tous les champs.";
+                return;
+            }
+
+            try {
+                feedback.textContent = "Publication en cours...";
+
+                const pseudoAuteur =
+                    currentUser.user_metadata?.pseudo ||
+                    currentUser.user_metadata?.username ||
+                    currentUser.email ||
+                    "Auteur inconnu";
+
+                let coverUrl = null;
+                if (coverUploadBlob) {
+                    coverUrl = await uploadCoverIfNeeded(currentUser.id);
+                }
+
+                const cleanedContent = sanitizeImportedHtml(content);
+
+                const { data: storyData, error: storyError } = await supabaseClient
+                    .from("stories")
+                    .insert({
+                        author_id: currentUser.id,
+                        author: pseudoAuteur,
+                        title: title,
+                        summary: summary,
+                        category: category,
+                        story_status: status,
+                        tags: tags.length ? tags : [],
+                        cover_url: coverUrl,
+                        content: cleanedContent
+                    })
+                    .select()
+                    .single();
+
+                if (storyError) throw storyError;
+
+                const { error: chapterError } = await supabaseClient
+                    .from("chapters")
+                    .insert({
+                        story_id: storyData.id,
+                        chapter_number: 1,
+                        title: chapterName,
+                        content: cleanedContent
+                    });
+
+                if (chapterError) throw chapterError;
+
+                feedback.textContent = "Histoire publiée avec succès.";
+                clearPublishForm();
+                await loadWriterStories();
+                await loadOverviewStats();
+                showPanelFromMenu("stories-panel");
+            } catch (error) {
+                console.error("Erreur :", error);
+                feedback.textContent = error.message || "Erreur lors de la publication.";
+            }
+        }
+
+        async function publishNextChapter() {
+            const feedback = document.getElementById("continue-story-feedback");
+
+            if (!selectedStory) {
+                feedback.textContent = "Aucune histoire sélectionnée.";
+                return;
+            }
+
+            const chapterTitle = document.getElementById("next-chapter-name-input").value.trim();
+            const previewHtml = document.getElementById("next-import-preview").innerHTML.trim();
+
+            if (!chapterTitle) {
+                feedback.textContent = "Ajoute un nom de chapitre.";
+                return;
+            }
+
+            if (!previewHtml) {
+                feedback.textContent = "Importe ou écris le contenu du chapitre.";
+                return;
+            }
+
+            try {
+                feedback.textContent = "Publication du chapitre en cours...";
+
+                const nextNumber = currentStoryChapters.length
+                    ? Math.max(...currentStoryChapters.map(ch => Number(ch.chapter_number) || 0)) + 1
+                    : 1;
+
+                const cleanedContent = sanitizeImportedHtml(previewHtml);
+
+                const { error: chapterError } = await supabaseClient
+                    .from("chapters")
+                    .insert({
+                        story_id: selectedStory.id,
+                        chapter_number: nextNumber,
+                        title: chapterTitle,
+                        content: cleanedContent
+                    });
+
+                if (chapterError) throw chapterError;
+
+                const { error: storyUpdateError } = await supabaseClient
+                    .from("stories")
+                    .update({
+                        content: cleanedContent
+                    })
+                    .eq("id", selectedStory.id)
+                    .eq("author_id", currentUser.id);
+
+                if (storyUpdateError) throw storyUpdateError;
+
+                await openStoryDetail(selectedStory.id);
+                openContinueStoryForm();
+                document.getElementById("continue-story-feedback").textContent = "Chapitre publié avec succès.";
+                await loadWriterStories();
+                await loadOverviewStats();
+            } catch (error) {
+                console.error(error);
+                feedback.textContent = "Impossible de publier ce chapitre.";
+            }
+        }
+
+        function clearPublishForm() {
+            document.getElementById("story-title-input").value = "";
+            document.getElementById("story-chapter-name-input").value = "";
+            document.getElementById("story-summary-input").value = "";
+            document.getElementById("story-category-input").value = "";
+            document.getElementById("story-status-input").value = "";
+            document.getElementById("docx-file-input").value = "";
+            document.getElementById("docx-file-name").textContent = "Aucun fichier sélectionné.";
+            document.getElementById("import-feedback").textContent = "";
+            document.getElementById("publish-feedback").textContent = "";
+            document.getElementById("import-preview").innerHTML = "";
+            importedHtml = "";
+
+            document.querySelectorAll(".story-tag-input").forEach(input => {
+                input.checked = false;
+                input.disabled = false;
+            });
+
+            document.getElementById("tag-limit-feedback").textContent = "";
+            clearSelectedCover();
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function normalizeStatusClass(status) {
+            return status === "terminée" ? "status-finished" : "status-ongoing";
+        }
+
+        function formatDate(value) {
+            if (!value) return "Date inconnue";
+            const date = new Date(value);
+            return date.toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            });
+        }
+
+        function getStoryCardCoverHtml(story) {
+            if (story.cover_url) {
+                return `<img src="${story.cover_url}" alt="Couverture de ${escapeHtml(story.title)}">`;
+            }
+            return `Pas de couverture`;
+        }
+
+        function buildStoryItemHtml(story) {
+            const tags = Array.isArray(story.tags) ? story.tags : [];
+
+            return `
+                <article class="story-item" onclick="openStoryDetail('${story.id}')">
+                    <div class="story-item-cover">
+                        ${getStoryCardCoverHtml(story)}
+                    </div>
+
+                    <div>
+                        <div class="story-item-title">${escapeHtml(story.title)}</div>
+
+                        <div class="story-item-meta">
+                            <span class="story-badge">${escapeHtml(story.category || "Sans catégorie")}</span>
+                            <span class="story-badge ${normalizeStatusClass(story.story_status || "en cours")}">${escapeHtml(story.story_status || "en cours")}</span>
+                        </div>
+
+                        <div class="story-item-summary">${escapeHtml(story.summary || "Aucun résumé.")}</div>
+
+                        <div class="story-item-tags">
+                            ${tags.map(tag => `<span class="story-item-tag">${escapeHtml(tag)}</span>`).join("")}
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderStoryDetail(story, chapters) {
+            const cover = document.getElementById("story-detail-cover");
+            const meta = document.getElementById("story-detail-meta");
+            const tagsContainer = document.getElementById("story-detail-tags");
+            const chaptersList = document.getElementById("story-chapters-list");
+            const feedback = document.getElementById("story-detail-feedback");
+
+            feedback.textContent = "";
+            currentStoryChapters = chapters || [];
+
+            closeAllDetailTools();
+
+            if (story.cover_url) {
+                cover.innerHTML = `<img src="${story.cover_url}" alt="Couverture de ${escapeHtml(story.title)}">`;
+            } else {
+                cover.textContent = "Pas de couverture";
+            }
+
+            document.getElementById("story-detail-title").textContent = story.title || "Sans titre";
+            document.getElementById("story-detail-summary").textContent = story.summary || "Aucun résumé.";
+
+            meta.innerHTML = `
+                <span class="story-badge">${escapeHtml(story.category || "Sans catégorie")}</span>
+                <span class="story-badge ${normalizeStatusClass(story.story_status || "en cours")}">${escapeHtml(story.story_status || "en cours")}</span>
+                <span class="story-badge">${chapters.length} chapitre(s)</span>
+                <span class="story-badge">${escapeHtml(story.author || "Auteur inconnu")}</span>
+            `;
+
+            const tags = Array.isArray(story.tags) ? story.tags : [];
+            tagsContainer.innerHTML = tags.length
+                ? tags.map(tag => `<span class="story-item-tag">${escapeHtml(tag)}</span>`).join("")
+                : `<span class="story-item-tag">Aucun tag</span>`;
+
+            if (!chapters.length) {
+                chaptersList.innerHTML = `
+                    <div class="story-placeholder">
+                        Aucun chapitre trouvé pour cette histoire.
+                    </div>
+                `;
+                return;
+            }
+
+            chaptersList.innerHTML = chapters.map(chapter => `
+                <div class="chapter-item">
+                    <div class="chapter-item-main">
+                        <div class="chapter-number">Chapitre ${chapter.chapter_number}</div>
+                        <div class="chapter-title">${escapeHtml(chapter.title || "Sans titre")}</div>
+                        <div class="chapter-date">Publié le ${formatDate(chapter.created_at)}</div>
+                    </div>
+
+                    <div class="quick-actions" style="margin-top:0;">
+    <button class="tiny-button" type="button" onclick="event.stopPropagation(); readChapter(${chapter.id})">
+        Lire
+    </button>
+
+    <button class="tiny-button" type="button" onclick="event.stopPropagation(); openChapterEditor(${chapter.id})">
+        Modifier
+    </button>
+</div>
+                </div>
+            `).join("");
+        }
+
+        async function openStoryDetail(storyId) {
+            if (!currentUser) return;
+
+            const feedback = document.getElementById("writer-stories-feedback");
+            feedback.textContent = "Chargement de l’histoire...";
+
+            try {
+                const { data: story, error: storyError } = await supabaseClient
+                    .from("stories")
+                    .select("*")
+                    .eq("id", storyId)
+                    .eq("author_id", currentUser.id)
+                    .single();
+
+                if (storyError) throw storyError;
+
+                const { data: chapters, error: chaptersError } = await supabaseClient
+                    .from("chapters")
+                    .select("*")
+                    .eq("story_id", storyId)
+                    .order("chapter_number", { ascending: true });
+
+                if (chaptersError) throw chaptersError;
+
+                selectedStory = story;
+                renderStoryDetail(story, chapters || []);
+
+                document.getElementById("stories-library-view").classList.remove("active");
+                document.getElementById("story-detail-view").classList.add("active");
+                feedback.textContent = "";
+            } catch (error) {
+                console.error(error);
+                feedback.textContent = "Impossible de charger cette histoire.";
+            }
+        }
+
+        function closeStoryDetail() {
+    selectedStory = null;
+    editingChapterId = null;
+    currentStoryChapters = [];
+    document.getElementById("story-detail-feedback").textContent = "";
+    closeAllDetailTools();
+    document.getElementById("story-detail-view").classList.remove("active");
+    document.getElementById("stories-library-view").classList.add("active");
+}
+
+        function openContinueStoryForm() {
+            if (!selectedStory) return;
+
+            const continueCard = document.getElementById("continue-story-card");
+            const editCard = document.getElementById("edit-chapter-card");
+            const feedback = document.getElementById("continue-story-feedback");
+
+            closeAllDetailTools();
+continueCard.style.display = "block";
+            feedback.textContent = "";
+
+            const nextNumber = currentStoryChapters.length
+                ? Math.max(...currentStoryChapters.map(ch => Number(ch.chapter_number) || 0)) + 1
+                : 1;
+
+            document.getElementById("next-chapter-name-input").value = `Chapitre ${nextNumber}`;
+            document.getElementById("next-docx-file-input").value = "";
+            document.getElementById("next-docx-file-name").textContent = "Aucun fichier sélectionné.";
+            document.getElementById("next-import-feedback").textContent = "";
+            document.getElementById("next-import-preview").innerHTML = "";
+            continueImportedHtml = "";
+
+            continueCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function cancelContinueStory() {
+            document.getElementById("continue-story-card").style.display = "none";
+            document.getElementById("continue-story-feedback").textContent = "";
+            document.getElementById("next-chapter-name-input").value = "";
+            document.getElementById("next-docx-file-input").value = "";
+            document.getElementById("next-docx-file-name").textContent = "Aucun fichier sélectionné.";
+            document.getElementById("next-import-feedback").textContent = "";
+            document.getElementById("next-import-preview").innerHTML = "";
+            continueImportedHtml = "";
+        }
+
+        function openStoryEditHint() {
+            const feedback = document.getElementById("story-detail-feedback");
+            feedback.textContent = "Choisis un chapitre dans la liste pour le modifier.";
+        }
+
+        function openChapterEditor(chapterId) {
+            const chapter = currentStoryChapters.find(ch => Number(ch.id) === Number(chapterId));
+            if (!chapter) return;
+
+            editingChapterId = chapter.id;
+
+            closeAllDetailTools();
+            document.getElementById("edit-chapter-card").style.display = "block";
+            document.getElementById("edit-chapter-feedback").textContent = "";
+            document.getElementById("edit-chapter-name-input").value = chapter.title || "";
+            document.getElementById("edit-chapter-preview").innerHTML = chapter.content || "";
+
+            document.getElementById("edit-chapter-card").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function cancelChapterEdit() {
+            editingChapterId = null;
+            document.getElementById("edit-chapter-card").style.display = "none";
+            document.getElementById("edit-chapter-feedback").textContent = "";
+            document.getElementById("edit-chapter-name-input").value = "";
+            document.getElementById("edit-chapter-preview").innerHTML = "";
+        }
+
+        async function saveChapterEdit() {
+            const feedback = document.getElementById("edit-chapter-feedback");
+
+            if (!selectedStory || !editingChapterId) {
+                feedback.textContent = "Aucun chapitre sélectionné.";
+                return;
+            }
+
+            const chapterTitle = document.getElementById("edit-chapter-name-input").value.trim();
+            const previewHtml = document.getElementById("edit-chapter-preview").innerHTML.trim();
+
+            if (!chapterTitle) {
+                feedback.textContent = "Ajoute un nom de chapitre.";
+                return;
+            }
+
+            if (!previewHtml) {
+                feedback.textContent = "Le contenu du chapitre est vide.";
+                return;
+            }
+
+            try {
+                feedback.textContent = "Enregistrement en cours...";
+
+                const cleanedContent = sanitizeImportedHtml(previewHtml);
+
+                const { error: chapterError } = await supabaseClient
+                    .from("chapters")
+                    .update({
+                        title: chapterTitle,
+                        content: cleanedContent,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq("id", editingChapterId);
+
+                if (chapterError) throw chapterError;
+
+                const currentChapter = currentStoryChapters.find(ch => Number(ch.id) === Number(editingChapterId));
+                const highestChapterNumber = Math.max(...currentStoryChapters.map(ch => Number(ch.chapter_number) || 0));
+                const editedChapterNumber = Number(currentChapter?.chapter_number || 0);
+
+                if (editedChapterNumber === highestChapterNumber) {
+                    const { error: storyUpdateError } = await supabaseClient
+                        .from("stories")
+                        .update({
+                            content: cleanedContent
+                        })
+                        .eq("id", selectedStory.id)
+                        .eq("author_id", currentUser.id);
+
+                    if (storyUpdateError) throw storyUpdateError;
+                }
+
+                await openStoryDetail(selectedStory.id);
+                document.getElementById("edit-chapter-feedback").textContent = "Chapitre mis à jour.";
+                await loadWriterStories();
+            } catch (error) {
+                console.error(error);
+                feedback.textContent = "Impossible d’enregistrer les modifications.";
+            }
+        }
+
+        async function deleteCurrentStory() {
+            if (!selectedStory) return;
+            await deleteStory(selectedStory.id);
+        }
+
+        async function deleteStory(storyId) {
+            const confirmed = window.confirm("Supprimer cette histoire ? Cette action est définitive.");
+            if (!confirmed) return;
+
+            const detailFeedback = document.getElementById("story-detail-feedback");
+            const listFeedback = document.getElementById("writer-stories-feedback");
+
+            try {
+                const { error } = await supabaseClient
+                    .from("stories")
+                    .delete()
+                    .eq("id", storyId)
+                    .eq("author_id", currentUser.id);
+
+                if (error) throw error;
+
+                if (selectedStory && selectedStory.id === storyId) {
+                    closeStoryDetail();
+                }
+
+                listFeedback.textContent = "Histoire supprimée.";
+                detailFeedback.textContent = "";
+                await loadWriterStories();
+                await loadOverviewStats();
+            } catch (error) {
+                console.error(error);
+                if (selectedStory && selectedStory.id === storyId) {
+                    detailFeedback.textContent = "Impossible de supprimer cette histoire.";
+                } else {
+                    listFeedback.textContent = "Impossible de supprimer cette histoire.";
+                }
+            }
+        }
+
+        async function loadWriterStories() {
+            const list = document.getElementById("writer-stories-list");
+            const feedback = document.getElementById("writer-stories-feedback");
+
+            if (!currentUser) {
+                list.innerHTML = "";
+                feedback.textContent = "";
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("stories")
+                    .select("*")
+                    .eq("author_id", currentUser.id)
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || !data.length) {
+                    list.innerHTML = `
+                        <div class="story-placeholder">
+                            Aucune histoire publiée pour le moment.
+                        </div>
+                    `;
+                    feedback.textContent = "";
+                    return;
+                }
+
+                list.innerHTML = data.map(buildStoryItemHtml).join("");
+                feedback.textContent = `${data.length} histoire(s) publiée(s).`;
+            } catch (error) {
+                console.error(error);
+                list.innerHTML = "";
+                feedback.textContent = "Impossible de charger tes histoires.";
+            }
+        }
+
+        async function loadOverview() {
+            if (!currentUser) return;
+
+            const metadata = currentUser.user_metadata || {};
+            const pseudo = metadata.pseudo || "Écrivain";
+
+            document.getElementById("overview-title").textContent = `Bienvenue, ${pseudo}`;
+            document.getElementById("overview-subtitle").textContent =
+                "Retrouve ton espace d’écriture, publie tes histoires et prépare la suite de tes mots.";
+        }
+
+        async function loadOverviewStats() {
+            if (!currentUser) return;
+
+            try {
+                const { data: stories, error: storiesError } = await supabaseClient
+                    .from("stories")
+                    .select("id")
+                    .eq("author_id", currentUser.id);
+
+                if (storiesError) throw storiesError;
+
+                const storyCount = stories ? stories.length : 0;
+                document.getElementById("overview-stories-count").textContent = storyCount;
+
+                if (!storyCount) {
+                    document.getElementById("overview-chapters-count").textContent = "0";
+                    return;
+                }
+
+                const storyIds = stories.map(item => item.id);
+
+                const { data: chapters, error: chaptersError } = await supabaseClient
+                    .from("chapters")
+                    .select("id, story_id")
+                    .in("story_id", storyIds);
+
+                if (chaptersError) throw chaptersError;
+
+                document.getElementById("overview-chapters-count").textContent = chapters ? chapters.length : 0;
+            } catch (error) {
+                console.error(error);
+                document.getElementById("overview-stories-count").textContent = "—";
+                document.getElementById("overview-chapters-count").textContent = "—";
+            }
+        }
+
+        async function ensureAuthenticatedWriter() {
+            const { data, error } = await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return false;
+            }
+
+            currentUser = data.user;
+
+            const metadata = currentUser.user_metadata || {};
+            const roles = Array.isArray(metadata.roles)
+                ? metadata.roles
+                : (metadata.role ? [metadata.role] : ["reader"]);
+
+            if (!roles.includes("writer")) {
+                window.location.href = "dashboard.html";
+                return false;
+            }
+
+            return true;
+        }
+
+        function setupEvents() {
+            document.getElementById("docx-file-input").addEventListener("change", async function (event) {
+                const file = event.target.files?.[0];
+                await importDocx(file);
+            });
+
+            document.getElementById("next-docx-file-input").addEventListener("change", async function (event) {
+                const file = event.target.files?.[0];
+                await importNextChapterDocx(file);
+            });
+
+            document.getElementById("story-cover-input").addEventListener("change", async function (event) {
+                const file = event.target.files?.[0];
+                await handleCoverSelection(file);
+            });
+
+            document.querySelectorAll(".story-tag-input").forEach(input => {
+                input.addEventListener("change", enforceTagLimit);
+            });
+        }
+
+        async function initPage() {
+            loadHeader();
+
+            const allowed = await ensureAuthenticatedWriter();
+            if (!allowed) return;
+
+            setupEvents();
+            await loadOverview();
+            await loadWriterStories();
+            await loadOverviewStats();
+            enforceTagLimit();
+        }
+
+        function closeAllDetailTools() {
+    document.getElementById("continue-story-card").style.display = "none";
+    document.getElementById("edit-chapter-card").style.display = "none";
+    document.getElementById("read-chapter-card").style.display = "none";
+}
+
+function readCurrentStory() {
+    if (!selectedStory) return;
+
+    closeAllDetailTools();
+
+    const readCard = document.getElementById("read-chapter-card");
+    const title = document.getElementById("read-chapter-title");
+    const subtitle = document.getElementById("read-chapter-subtitle");
+    const content = document.getElementById("read-chapter-content");
+
+    title.textContent = selectedStory.title || "Lecture";
+    subtitle.textContent = `${currentStoryChapters.length} chapitre(s)`;
+
+    if (!currentStoryChapters.length) {
+        content.innerHTML = "<p>Aucun chapitre disponible.</p>";
+    } else {
+        content.innerHTML = currentStoryChapters
+            .sort((a, b) => (a.chapter_number || 0) - (b.chapter_number || 0))
+            .map(chapter => `
+                <section style="margin-bottom: 42px;">
+                    <h2 style="margin-bottom: 8px;">Chapitre ${chapter.chapter_number}</h2>
+                    <h3 style="margin-top: 0; margin-bottom: 18px; color: #f0c674;">
+                        ${escapeHtml(chapter.title || "Sans titre")}
+                    </h3>
+                    <div>${chapter.content || "<p>Chapitre vide.</p>"}</div>
+                </section>
+            `)
+            .join("");
+    }
+
+    readCard.style.display = "block";
+    readCard.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function readChapter(chapterId) {
+    const chapter = currentStoryChapters.find(ch => Number(ch.id) === Number(chapterId));
+    if (!chapter) return;
+
+    closeAllDetailTools();
+
+    const readCard = document.getElementById("read-chapter-card");
+    const title = document.getElementById("read-chapter-title");
+    const subtitle = document.getElementById("read-chapter-subtitle");
+    const content = document.getElementById("read-chapter-content");
+
+    title.textContent = chapter.title || `Chapitre ${chapter.chapter_number}`;
+    subtitle.textContent = `Chapitre ${chapter.chapter_number} • Publié le ${formatDate(chapter.created_at)}`;
+    content.innerHTML = chapter.content || "<p>Ce chapitre est vide.</p>";
+
+    readCard.style.display = "block";
+    readCard.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeReadChapter() {
+    document.getElementById("read-chapter-card").style.display = "none";
+}
+
+        initPage();
+    </script>
+</body>
+</html>

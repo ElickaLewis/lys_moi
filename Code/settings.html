@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres - Lys Moi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                linear-gradient(rgba(10, 10, 15, 0.65), rgba(10, 10, 15, 0.78)),
+                url("images/background.png");
+            background-size: cover;
+            background-position: right center;
+            background-repeat: no-repeat;
+            color: #f5f1e8;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 30px;
+            padding-top: 110px;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: #f0c674;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .profile-btn {
+            background: rgba(20, 20, 25, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .profile-menu-wrapper {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(20, 20, 25, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2000;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
+        }
+
+        .settings-shell {
+            width: 100%;
+            max-width: 1180px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .settings-sidebar,
+        .settings-content {
+            background: rgba(20, 20, 25, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 28px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .settings-sidebar {
+            padding: 24px 18px;
+            position: sticky;
+            top: 95px;
+        }
+
+        .settings-content {
+            padding: 36px 34px;
+            min-height: 620px;
+        }
+
+        .sidebar-title {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            padding: 0 10px;
+        }
+
+        .sidebar-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #f5f1e8;
+            text-align: left;
+            padding: 14px 16px;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(2px);
+        }
+
+        .sidebar-item.active {
+            background: rgba(240, 198, 116, 0.12);
+            border: 1px solid rgba(240, 198, 116, 0.20);
+            color: #f0c674;
+        }
+
+        .sidebar-item.danger {
+            color: #ffb4b4;
+        }
+
+        .sidebar-item.danger.active {
+            background: rgba(180, 50, 50, 0.16);
+            border: 1px solid rgba(255, 120, 120, 0.20);
+            color: #ffbdbd;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-kicker {
+            font-size: 0.82rem;
+            letter-spacing: 3px;
+            color: #c9b08a;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .panel h1 {
+            margin: 0 0 14px;
+            font-size: 2.4rem;
+            color: #fff8ee;
+        }
+
+        .panel-subtitle {
+            color: #ddd3c4;
+            line-height: 1.7;
+            max-width: 760px;
+            margin-bottom: 30px;
+            font-size: 1.02rem;
+        }
+
+        .settings-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px;
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .settings-card h2 {
+            margin: 0 0 10px;
+            font-size: 1.25rem;
+            color: #fff8ee;
+        }
+
+        .settings-card p {
+            margin: 0;
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        .account-lines {
+            display: grid;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .account-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.05);
+            flex-wrap: wrap;
+        }
+
+        .account-label {
+            color: #c9b08a;
+        }
+
+        .account-value {
+            color: #f5f1e8;
+            font-weight: bold;
+        }
+
+        .danger-card {
+            border: 1px solid rgba(255, 120, 120, 0.16);
+            background: rgba(120, 20, 20, 0.12);
+        }
+
+        .danger-card h2 {
+            color: #ffd6d6;
+        }
+
+        .danger-card p {
+            color: #f0d0d0;
+        }
+
+        .danger-list {
+            margin: 18px 0 0;
+            padding-left: 18px;
+            color: #f0d0d0;
+            line-height: 1.8;
+        }
+
+        .danger-actions {
+            margin-top: 24px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .danger-button,
+        .secondary-button {
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .danger-button {
+            border: none;
+            background: linear-gradient(135deg, #a52b2b, #7a1d1d);
+            color: #fff4f4;
+            box-shadow: 0 12px 28px rgba(120, 20, 20, 0.28);
+        }
+
+        .danger-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+            box-shadow: 0 16px 34px rgba(120, 20, 20, 0.38);
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: #f5f1e8;
+            border: 1px solid rgba(255,255,255,0.22);
+        }
+
+        .secondary-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.96;
+        }
+
+        .warning-box {
+            margin-top: 22px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed rgba(255,255,255,0.12);
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        .danger-confirm-box {
+            display: none;
+            margin-top: 22px;
+            padding: 20px;
+            border-radius: 18px;
+            background: rgba(0,0,0,0.18);
+            border: 1px solid rgba(255, 120, 120, 0.16);
+        }
+
+        .danger-confirm-box.open {
+            display: block;
+        }
+
+        .danger-confirm-box label {
+            display: block;
+            margin-bottom: 10px;
+            color: #f0d0d0;
+        }
+
+        .danger-confirm-box input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            margin-bottom: 14px;
+        }
+
+        .danger-confirm-box input:focus,
+        .support-form input:focus,
+        .support-form select:focus,
+        .support-form textarea:focus {
+            box-shadow: 0 0 0 2px rgba(240, 198, 116, 0.28);
+        }
+
+        .danger-message {
+            margin-top: 10px;
+            min-height: 22px;
+            color: #ffcccc;
+        }
+
+        .support-box {
+            margin-top: 22px;
+            padding: 20px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: none;
+        }
+
+        .support-box.open {
+            display: block;
+        }
+
+        .support-box h3 {
+            margin: 0 0 10px;
+            color: #fff8ee;
+            font-size: 1.15rem;
+        }
+
+        .support-box p {
+            margin: 0 0 16px;
+            color: #ddd3c4;
+            line-height: 1.7;
+        }
+
+        .support-form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .support-form label {
+            display: block;
+            margin-bottom: 6px;
+            color: #ddd3c4;
+            font-size: 0.95rem;
+        }
+
+        .support-form input,
+        .support-form select,
+        .support-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            font-family: inherit;
+            background: rgba(255,255,255,0.08);
+            color: #f5f1e8;
+        }
+
+        .support-form select {
+            cursor: pointer;
+        }
+
+        .support-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .support-form-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .support-message {
+            min-height: 24px;
+            color: #f0c674;
+            margin-top: 4px;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 900px) {
+            .settings-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-sidebar {
+                position: static;
+            }
+
+            .settings-content {
+                min-height: auto;
+            }
+
+            .panel h1 {
+                font-size: 2rem;
+            }
+
+            body {
+                padding-top: 100px;
+            }
+
+            .main-header {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <div class="settings-shell">
+        <aside class="settings-sidebar">
+            <div class="sidebar-title">Paramètres</div>
+
+            <div class="sidebar-group">
+                <button class="sidebar-item active" data-panel="account-panel" onclick="showPanel('account-panel', this)">
+                    Compte
+                </button>
+
+                <button class="sidebar-item" data-panel="preferences-panel" onclick="showPanel('preferences-panel', this)">
+                    Préférences
+                </button>
+
+                <button class="sidebar-item" data-panel="language-panel" onclick="showPanel('language-panel', this)">
+                    Langue
+                </button>
+
+                <button class="sidebar-item danger" data-panel="delete-panel" onclick="showPanel('delete-panel', this)">
+                    Supprimer le compte
+                </button>
+            </div>
+        </aside>
+
+        <main class="settings-content">
+            <section class="panel active" id="account-panel">
+                <div class="panel-kicker">Compte</div>
+                <h1>Ton espace personnel</h1>
+                <p class="panel-subtitle">
+                    Ici, tu retrouveras les informations essentielles de ton compte Lys Moi.
+                    Cette section servira plus tard à gérer davantage de réglages liés à ton profil.
+                </p>
+
+                <div class="settings-card">
+                    <h2>Informations du compte</h2>
+                    <p>
+                        Les informations affichées ici sont liées à ton compte actuel.
+                    </p>
+
+                    <div class="account-lines">
+                        <div class="account-line">
+                            <span class="account-label">Pseudo</span>
+                            <span class="account-value" id="account-pseudo">Chargement...</span>
+                        </div>
+
+                        <div class="account-line">
+                            <span class="account-label">Email</span>
+                            <span class="account-value" id="account-email">Chargement...</span>
+                        </div>
+
+                        <div class="account-line">
+                            <span class="account-label">Rôle</span>
+                            <span class="account-value" id="account-role">Chargement...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="preferences-panel">
+                <div class="panel-kicker">Préférences</div>
+                <h1>Préférences</h1>
+                <p class="panel-subtitle">
+                    Cette zone accueillera bientôt les préférences de lecture, d’écriture,
+                    de notifications et les futurs réglages d’expérience.
+                </p>
+
+                <div class="settings-card">
+                    <h2>À venir</h2>
+                    <p>
+                        Tu pourras ici choisir des options comme le confort de lecture,
+                        certains comportements par défaut, ou encore des préférences liées à ton espace personnel.
+                    </p>
+                </div>
+            </section>
+
+            <section class="panel" id="language-panel">
+                <div class="panel-kicker">Langue</div>
+                <h1>Langue</h1>
+                <p class="panel-subtitle">
+                    Cette section permettra plus tard de choisir la langue de l’interface
+                    et d’adapter l’expérience à chaque utilisateur.
+                </p>
+
+                <div class="settings-card">
+                    <h2>Langue de l’interface</h2>
+                    <p>
+                        Pour l’instant, Lys Moi est affiché en français.
+                        On pourra ensuite y ajouter d’autres langues proprement.
+                    </p>
+                </div>
+            </section>
+
+            <section class="panel" id="delete-panel">
+                <div class="panel-kicker">Zone sensible</div>
+                <h1>Supprimer le compte</h1>
+                <p class="panel-subtitle">
+                    Cette action est définitive. Elle doit donc être clairement séparée du reste
+                    et demander une confirmation explicite avant toute suppression.
+                </p>
+
+                <div class="settings-card danger-card">
+                    <h2>Avant de continuer</h2>
+                    <p>
+                        Si tu supprimes ton compte, tu perdras l’accès à ton espace personnel associé à cette adresse.
+                    </p>
+
+                    <ul class="danger-list">
+                        <li>La suppression est définitive.</li>
+                        <li>Tu devras recréer un compte si tu veux revenir plus tard.</li>
+                        <li>Cette action ne doit pas être déclenchée par erreur.</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <strong>Attention aux achats et contenus payants :</strong><br><br>
+                        Si ton compte est lié à un achat, un abonnement, un contenu débloqué,
+                        ou à tout autre avantage payant, la suppression du compte peut entraîner
+                        une perte d’accès définitive à ces éléments.<br><br>
+                        Avant de confirmer, assure-toi de bien vérifier ce que tu pourrais perdre,
+                        notamment si certaines données, lectures, publications ou options premium
+                        sont rattachées à ce compte.
+                    </div>
+
+                    <div class="warning-box">
+                        En cas de situation particulière — abonnement, achat récent, problème d’accès,
+                        erreur de compte ou besoin de récupération — il est recommandé de contacter
+                        le support avant de supprimer le compte.
+                    </div>
+
+                    <div class="danger-actions">
+                        <button class="secondary-button" onclick="toggleSupportForm()">
+                            Contacter le support
+                        </button>
+
+                        <button class="danger-button" onclick="toggleDeleteConfirm()">
+                            Je veux supprimer mon compte
+                        </button>
+
+                        <button class="secondary-button" onclick="goDashboard()">
+                            Annuler et revenir au dashboard
+                        </button>
+                    </div>
+
+                    <div class="support-box" id="support-box">
+                        <h3>Contacter le support</h3>
+                        <p>
+                            Décris ta situation avant suppression. Ta demande sera enregistrée sur Lys Moi
+                            puis envoyée au support.
+                        </p>
+
+                        <form class="support-form" id="support-form">
+                            <div>
+                                <label for="support-subject">Sujet</label>
+                                <input type="text" id="support-subject" placeholder="Ex. Problème avant suppression" required>
+                            </div>
+
+                            <div>
+                                <label for="support-category">Catégorie</label>
+                                <select id="support-category" required>
+                                    <option value="general">Question générale</option>
+                                    <option value="account_issue">Problème de compte</option>
+                                    <option value="purchase_issue">Achat / abonnement</option>
+                                    <option value="deletion_help">Suppression de compte</option>
+                                    <option value="recovery_request">Récupération / vérification</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="support-message-input">Message</label>
+                                <textarea
+                                    id="support-message-input"
+                                    placeholder="Explique ta situation, le plus clairement possible..."
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div class="support-form-actions">
+                                <button type="submit" class="secondary-button">Envoyer la demande</button>
+                                <button type="button" class="secondary-button" onclick="toggleSupportForm()">Fermer</button>
+                            </div>
+
+                            <p class="support-message" id="support-message"></p>
+                        </form>
+                    </div>
+
+                    <div class="danger-confirm-box" id="danger-confirm-box">
+                        <label for="delete-confirm-input">
+                            Pour confirmer plus tard, tu pourras demander une validation explicite ici
+                            (par exemple avec “SUPPRIMER” ou ton email).
+                        </label>
+
+                        <input
+                            id="delete-confirm-input"
+                            type="text"
+                            placeholder="Zone de confirmation"
+                            disabled
+                        >
+
+                        <button class="danger-button" type="button" disabled>
+                            Suppression bientôt disponible
+                        </button>
+
+                        <p class="danger-message" id="danger-message">
+                            La logique visuelle est prête. On branchera la vraie suppression ensuite.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://infljnmssewkeayrvtwc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_YI-ATv9K4m3ftejOIZpnQQ_kn4mMdP9";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function goHome() { window.location.href = "index.html"; }
+        function goLogin() { window.location.href = "login.html"; }
+        function goSignup() { window.location.href = "signup.html"; }
+        function goDashboard() { window.location.href = "dashboard.html"; }
+        function goWriterProfile() { window.location.href = "writer-profile.html"; }
+        function goSettings() { window.location.href = "settings.html"; }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+        }
+
+        function setupProfileDropdown() {
+            const trigger = document.getElementById("profile-menu-trigger");
+            const dropdown = document.getElementById("profile-dropdown");
+            if (!trigger || !dropdown) return;
+
+            trigger.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdown.classList.toggle("open");
+            });
+
+            dropdown.addEventListener("click", function (event) {
+                event.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                dropdown.classList.remove("open");
+            });
+        }
+
+        async function loadHeader() {
+            const { data, error } = await supabaseClient.auth.getUser();
+            const header = document.getElementById("header-right");
+
+            if (error || !data.user) {
+                header.innerHTML = `
+                    <button class="header-btn" onclick="goLogin()">Connexion</button>
+                    <button class="header-btn" onclick="goSignup()">Inscription</button>
+                `;
+                return;
+            }
+
+            const user = data.user;
+            const pseudo = user.user_metadata?.pseudo || "Mon compte";
+            const avatarUrl = user.user_metadata?.avatar_url || "images/default-avatar.png";
+            const role = user.user_metadata?.role || "reader";
+
+            header.innerHTML = `
+                <button class="header-btn" onclick="goHome()">Accueil</button>
+
+                <div class="profile-menu-wrapper">
+                    <button
+                        class="header-btn profile-btn profile-trigger"
+                        id="profile-menu-trigger"
+                        type="button"
+                    >
+                        <img src="${avatarUrl}" alt="Avatar" class="header-avatar">
+                        <span>${pseudo}</span>
+                    </button>
+
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <button class="dropdown-item" onclick="goDashboard()">Mon espace</button>
+                        ${role === "writer" ? `<button class="dropdown-item" onclick="goWriterProfile()">Profil écrivain</button>` : ``}
+                        <button class="dropdown-item" onclick="goSettings()">Paramètres</button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item" onclick="logout()">Déconnexion</button>
+                    </div>
+                </div>
+            `;
+
+            setupProfileDropdown();
+        }
+
+        function showPanel(panelId, button) {
+            document.querySelectorAll(".panel").forEach(panel => {
+                panel.classList.remove("active");
+            });
+
+            document.querySelectorAll(".sidebar-item").forEach(item => {
+                item.classList.remove("active");
+            });
+
+            document.getElementById(panelId).classList.add("active");
+            button.classList.add("active");
+        }
+
+        function toggleDeleteConfirm() {
+            document.getElementById("danger-confirm-box").classList.toggle("open");
+        }
+
+        function toggleSupportForm() {
+            document.getElementById("support-box").classList.toggle("open");
+        }
+
+        async function loadAccountInfo() {
+            const { data, error } = await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = data.user;
+            const pseudo = user.user_metadata?.pseudo || "—";
+            const role = user.user_metadata?.role || "reader";
+            const email = user.email || "—";
+
+            document.getElementById("account-pseudo").textContent = pseudo;
+            document.getElementById("account-email").textContent = email;
+            document.getElementById("account-role").textContent =
+                role === "writer" ? "Écrivain ✍️" : "Lecteur 👀";
+        }
+
+        async function submitSupportRequest(event) {
+            event.preventDefault();
+
+            const feedback = document.getElementById("support-message");
+            const subject = document.getElementById("support-subject").value.trim();
+            const category = document.getElementById("support-category").value;
+            const messageText = document.getElementById("support-message-input").value.trim();
+
+            if (!subject || !messageText) {
+                feedback.textContent = "Merci de remplir le sujet et le message.";
+                return;
+            }
+
+            feedback.textContent = "Enregistrement de la demande...";
+
+            const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+
+            if (userError || !userData.user) {
+                feedback.textContent = "Impossible de récupérer l’utilisateur connecté.";
+                return;
+            }
+
+            const user = userData.user;
+
+            const payload = {
+                user_id: user.id,
+                pseudo: user.user_metadata?.pseudo || null,
+                email: user.email,
+                subject: subject,
+                category: category,
+                message: messageText,
+                status: "open"
+            };
+
+            const { data: insertedRow, error: insertError } = await supabaseClient
+                .from("support_requests")
+                .insert([payload])
+                .select("id")
+                .single();
+
+            if (insertError) {
+                feedback.textContent = "Erreur : " + insertError.message;
+                return;
+            }
+
+            feedback.textContent = "Envoi du message au support...";
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+
+            if (!session) {
+                feedback.textContent = "Session expirée, reconnecte-toi.";
+                return;
+            }
+
+            const accessToken = session.access_token;
+            console.log("TOKEN:", accessToken);
+
+            const functionUrl = "https://infljnmssewkeayrvtwc.supabase.co/functions/v1/send-support-email";
+
+            try {
+                const response = await fetch(functionUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({
+                        request_id: insertedRow.id,
+                        user_id: user.id,
+                        pseudo: user.user_metadata?.pseudo || null,
+                        email: user.email,
+                        subject: subject,
+                        category: category,
+                        message: messageText
+                    })
+                });
+
+                const result = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    feedback.textContent = "Demande enregistrée, mais l’envoi mail a échoué : " + (result.error || JSON.stringify(result));
+                    console.error("Erreur fonction support :", result);
+                    return;
+                }
+
+                feedback.textContent = "Demande envoyée au support 🎉";
+                document.getElementById("support-form").reset();
+            } catch (err) {
+                feedback.textContent = "Demande enregistrée, mais la fonction n’a pas pu être contactée.";
+                console.error("Erreur fetch vers Edge Function :", err);
+            }
+        }
+
+        document.getElementById("support-form").addEventListener("submit", submitSupportRequest);
+
+        loadHeader();
+        loadAccountInfo();
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Lys Moi</title>
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/auth.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <span class="logo" onclick="goHome()">Lys Moi</span>
+        <div class="header-right" id="header-right"></div>
+    </header>
+
+    <main class="auth-shell">
+        <div class="auth-card">
+            <div class="auth-topline">Lys Moi</div>
+            <h1>Créer un compte</h1>
+
+            <form id="signup-form" class="auth-form">
+                <div class="auth-field">
+                    <label for="pseudo" class="auth-label">Identifiant</label>
+                    <input
+                        type="text"
+                        id="pseudo"
+                        class="auth-input"
+                        placeholder="Choisis ton identifiant"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="email" class="auth-label">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        class="auth-input"
+                        placeholder="Ton adresse mail"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="password" class="auth-label">Mot de passe</label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="auth-input"
+                        placeholder="Choisis un mot de passe"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="confirm-password" class="auth-label">Confirmer le mot de passe</label>
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        class="auth-input"
+                        placeholder="Retape ton mot de passe"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="birthdate" class="auth-label">Date de naissance</label>
+                    <input
+                        type="date"
+                        id="birthdate"
+                        class="auth-input"
+                        required
+                    >
+                </div>
+
+                <div class="auth-field">
+                    <label for="role" class="auth-label">Type de compte</label>
+                    <select id="role" class="auth-input" required>
+                        <option value="reader">Lecteur</option>
+                        <option value="writer">Écrivain</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="main-btn primary-btn">
+                    Créer mon compte
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Déjà un compte ?
+                <span onclick="goLogin()">Se connecter</span>
+            </p>
+
+            <div id="signup-feedback" class="auth-feedback"></div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/pages/signup.js"></script>
+</body>
+</html>

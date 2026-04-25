@@ -1,0 +1,31 @@
+.dashboard-loading-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.dashboard-loading-card {
+    width: 100%;
+    max-width: 520px;
+    text-align: center;
+    background: rgba(20, 20, 25, 0.66);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-xl);
+    padding: 40px 28px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-main);
+}
+
+.dashboard-loading-card h1 {
+    margin: 0 0 12px;
+    color: var(--text-title);
+    font-size: 2.2rem;
+}
+
+.dashboard-loading-card p {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.7;
+}
